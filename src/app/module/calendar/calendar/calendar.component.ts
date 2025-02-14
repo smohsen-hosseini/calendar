@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {FormsModule} from '@angular/forms';
-
+import {FormsModule, ReactiveFormsModule,FormControl  } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+// import { MaterialTimePickerComponent } from '@candidosales/material-time-picker'; //third-party-library
 
 @Component({
   selector: 'app-calendar',
@@ -12,9 +12,11 @@ import {FormsModule} from '@angular/forms';
   imports: [
     MatFormFieldModule,
     MatInputModule,
-    MatTimepickerModule,
     MatDatepickerModule,
     FormsModule,
+    ReactiveFormsModule,
+    MatNativeDateModule,
+    // MaterialTimePickerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
@@ -22,6 +24,10 @@ import {FormsModule} from '@angular/forms';
 })
 export class CalendarComponent {
 
-  value!: Date;
+
+
+  dateControl = new FormControl(new Date());
+  date: Date = new Date();
+
 
 }
