@@ -1,0 +1,32 @@
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .timetable {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* Time column + Days */
+  }
+  
+  .time-column {
+    background-color: #f0f0f0;
+  }
+  
+  .day-column {
+    border-left: 1px solid #ccc;
+  }
+  
+  .time-slot {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+  }
+  
+  .event {
+    background-color: #e0f7fa;
+    padding: 5px;
+  }
+  
+  .mat-card {
+    margin-top: 2px;
+  }
+  
