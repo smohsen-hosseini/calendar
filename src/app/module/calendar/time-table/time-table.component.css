@@ -13,14 +13,19 @@
   }
   
   .day-column {
-    border-left: 1px solid #ccc;
+    /* border-left: 1px solid #ccc; */
+
+    display: flex;
+    flex-direction: column; 
+    /* flex-direction: column;     Ensure this allows vertical stacking */
   }
   
   .time-slot {
     border-bottom: 1px solid #eee;
     padding: 10px;
+    height: 20px; /* Ensure this is sufficient for visibility */
   }
-  
+
   .event {
     background-color: #e0f7fa;
     padding: 5px;

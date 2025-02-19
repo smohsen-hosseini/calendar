@@ -5,9 +5,11 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule,FormControl  } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 // import { MaterialTimePickerComponent } from '@candidosales/material-time-picker'; //third-party-library
+import { MatDialog } from '@angular/material/dialog';
+import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'calendar-form',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -26,19 +28,13 @@ export class CalendarComponent implements OnInit {
 
   calendarForm: FormGroup;
 
-
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, public dialog: MatDialog) {
     this.calendarForm = this.fb.group({
       dateControl: [new Date(), Validators.required],
       timeControl: ['', Validators.required],
     });
   }
 
-  // dateControl = new FormControl(new Date());
-  // date: Date = new Date();
-
-  // timeControl = new FormControl('');
 
   ngOnInit(): void {
   }
@@ -46,7 +42,8 @@ export class CalendarComponent implements OnInit {
   onSubmit() {
     if (this.calendarForm.valid) {
       console.log(this.calendarForm.value);
-    }
+      }
+      this.openAppointmentDialog(Date(),Date()); //test
   }
 
   
@@ -56,6 +53,39 @@ export class CalendarComponent implements OnInit {
 
   get timeControl(): FormControl {
     return this.calendarForm.get('timeControl') as FormControl;
+  }
+
+  
+  openAppointmentDialog(startTime: any, endTime: any): void {
+    const dialogRef = this.dialog.open(AppointmentDialogComponent, {
+      width: '400px', // Adjust as needed
+      data: { startTime: startTime, endTime: endTime } // Pass data to the dialog
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        console.log('Appointment Data:', result);
+        // Handle the data returned from the dialog (e.g., save the appointment)
+      }
+    });
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(AppointmentDialogComponent, {
+      width: '250px',
+      data: {
+        startTime: new Date(), // Set initial start time to the current date and time
+        endTime: new Date(new Date().getTime() + 60 * 60 * 1000), // Set initial end time to one hour later
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Appointment Data:', result);
+        // Handle the result here (e.g., save it to a server)
+      }
+    });
   }
   
 }

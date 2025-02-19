@@ -7,7 +7,7 @@ export const routes: Routes = [
     path : 'calendar',
     loadChildren : () => import('./module/calendar/calendar.module').then(m => m.CalendarModule),
     },
-    ];
+  ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

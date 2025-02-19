@@ -1,21 +1,42 @@
-<div class="calendar-picker-container">
+<div class="container-fluid">
+  <fieldset class="border rounded p-4">
+    <legend class="float-none w-auto px-2">Calendar (Add Appointment)</legend>
 
-    <br/>
+    
 
-    <mat-form-field appearance="outline">
-        <mat-label>Choose a date</mat-label>
-        <input matInput [formControl]="dateControl" [matDatepicker]="picker">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+    
+    <div class="row">
 
-        <mat-error *ngIf="dateControl?.hasError('required') && (dateControl.touched)">Date is required</mat-error>
-    </mat-form-field>
+      <div class="col-sm-6 col-md-3">
 
-  <mat-form-field>
-    <input matInput [formControl]="timeControl"  type="time">
-    <mat-error *ngIf="timeControl.hasError('required') && (timeControl.touched)">Time is required</mat-error>
-  </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [formControl]="dateControl" [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            <!-- <mat-error *ngIf="dateControl?.hasError('required') && (dateControl.touched)">Date is required</mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6 col-md-3">
+        <mat-form-field>
+          <input matInput [formControl]="timeControl"  type="time">
+          <!-- <mat-error *ngIf="timeControl.hasError('required') && (timeControl.touched)">Time is required</mat-error> -->
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 col-sm-12">
+        <button mat-flat-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-100">Submit
+        </button>
+
+        <button mat-button (click)="openDialog()">Open Appointment Dialog</button>
+
+      </div>
+    </div>
 
 
-   <button type="submit" [disabled]="!calendarForm.valid">Submit</button>
+  </fieldset>
 </div>

@@ -7,6 +7,7 @@ import { CalendarRoutingModule } from './calendar-routing.module';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatButton, MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [],
@@ -17,6 +18,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MatButton,
+    MatButtonModule, 
   ]
 })
 export class CalendarModule { }
