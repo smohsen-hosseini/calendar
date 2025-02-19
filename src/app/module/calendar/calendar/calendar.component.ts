@@ -7,6 +7,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 // import { MaterialTimePickerComponent } from '@candidosales/material-time-picker'; //third-party-library
 import { MatDialog } from '@angular/material/dialog';
 import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
+import { DateService } from '../../../service/DataService'; // Import DateService
+
 
 @Component({
   selector: 'calendar-form',
@@ -28,7 +30,7 @@ export class CalendarComponent implements OnInit {
 
   calendarForm: FormGroup;
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog) {
+  constructor(private fb: FormBuilder, public dialog: MatDialog,private dateService: DateService) {
     this.calendarForm = this.fb.group({
       dateControl: [new Date(), Validators.required],
       timeControl: ['', Validators.required],
@@ -37,10 +39,14 @@ export class CalendarComponent implements OnInit {
 
 
   ngOnInit(): void {
+    
   }
 
   onSubmit() {
+    console.log("onSubmit================");
+    
     if (this.calendarForm.valid) {
+      this.dateService.setSelectedDate(this.dateControl.value); // Set selected date
       console.log(this.calendarForm.value);
       }
       this.openAppointmentDialog(Date(),Date()); //test

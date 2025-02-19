@@ -2,7 +2,9 @@ import { Component, OnInit  } from '@angular/core';
 import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import {DraggableButtonComponent} from '../draggable-button/draggable-button.component'
+import { DraggableButtonComponent } from '../draggable-button/draggable-button.component'
+import { DateService } from '../../../service/DataService'; // Import DateService
+import { Subscription } from 'rxjs';  //Import Subscription
 
 interface Event {
   title: string;
@@ -23,13 +25,25 @@ export class TimeTableComponent implements OnInit {
 
   timeSlots: string[] = [];
   events: Event[] = [];  
+  private dateSubscription: Subscription | undefined;  //Define Subscription
+
   draggableButtons: { title: string }[] = [{ title: 'Button 1' }, { title: 'Button 2' }]; // Sample draggable buttons
 
-  constructor() { }
+  constructor(private dateService: DateService) { }
 
   ngOnInit(): void {
+    this.dateSubscription = this.dateService.selectedDate$.subscribe(date => { // Subscribe to selectedDate$
+      this.selectedDay = date; // Update selectedDay
+  });
+
     this.generateTimeSlots();
     this.loadEvents();
+  }
+
+  ngOnDestroy(): void {  //Implement OnDestroy
+    if (this.dateSubscription) {
+        this.dateSubscription.unsubscribe();  //Unsubscribe
+    }
   }
 
   generateTimeSlots() {

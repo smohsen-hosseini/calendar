@@ -3,39 +3,39 @@
     <legend class="float-none w-auto px-2">Calendar (Add Appointment)</legend>
 
     
+    <form [formGroup]="calendarForm" (ngSubmit)="onSubmit()">
+      <div class="row">
 
-    
-    <div class="row">
+        <div class="col-sm-6 col-md-3">
 
-      <div class="col-sm-6 col-md-3">
+          <mat-form-field appearance="outline">
+              <mat-label>Choose a date</mat-label>
+              <input matInput [formControl]="dateControl" [matDatepicker]="picker">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Choose a date</mat-label>
-            <input matInput [formControl]="dateControl" [matDatepicker]="picker">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+              <!-- <mat-error *ngIf="dateControl?.hasError('required') && (dateControl.touched)">Date is required</mat-error> -->
+          </mat-form-field>
+        </div>
 
-            <!-- <mat-error *ngIf="dateControl?.hasError('required') && (dateControl.touched)">Date is required</mat-error> -->
-        </mat-form-field>
+        <div class="col-sm-6 col-md-3">
+          <mat-form-field>
+            <input matInput [formControl]="timeControl"  type="time">
+            <!-- <mat-error *ngIf="timeControl.hasError('required') && (timeControl.touched)">Time is required</mat-error> -->
+          </mat-form-field>
+        </div>
       </div>
 
-      <div class="col-sm-6 col-md-3">
-        <mat-form-field>
-          <input matInput [formControl]="timeControl"  type="time">
-          <!-- <mat-error *ngIf="timeControl.hasError('required') && (timeControl.touched)">Time is required</mat-error> -->
-        </mat-form-field>
+      <div class="row">
+        <div class="col-md-2 col-sm-12">
+          <button mat-flat-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-100">Submit
+          </button>
+
+          <button mat-button (click)="openDialog()">Open Appointment Dialog</button>
+
+        </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-2 col-sm-12">
-        <button mat-flat-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-100">Submit
-        </button>
-
-        <button mat-button (click)="openDialog()">Open Appointment Dialog</button>
-
-      </div>
-    </div>
+  </form>
 
 
   </fieldset>
