@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CalendarModule } from './module/calendar/calendar.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [],
@@ -18,7 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     AppComponent,
     CalendarModule,
     MatDialogModule,
-
+    DragDropModule // Add this line
   ],
   providers: [],
   bootstrap: [AppComponent]

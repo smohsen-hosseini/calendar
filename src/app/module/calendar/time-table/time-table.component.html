@@ -1,49 +1,18 @@
 <div class="calendar-container">
   <div class="header">
-    <h2>Weekly Timetable</h2>
+      <h2>Timetable for {{ selectedDay | date:'EEEE, MMMM d' }}</h2>
   </div>
 
   <div class="timetable">
-    <div class="time-column">
-      <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-        {{ timeSlot }}
-      </div>
-    </div>
-
-    <div class="day-column" *ngFor="let day of days">
-      <div class="day-header">{{ day | date:'EEEE MMM d' }}</div>
-      <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-        <div *ngFor="let event of getEventsForSlot(day, timeSlot)" class="event">
-          <mat-card>{{ event.title }}</mat-card>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<!-- <div class="calendar-container">
-    <div class="header">
-      <h2>Weekly Timetable</h2>
-    </div>
-  
-    <div class="timetable">
       <div class="time-column">
-        <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-          {{ timeSlot }}
-        </div>
-      </div>
-  
-      <div class="day-column" *ngFor="let day of days">
-        <div class="day-header">{{ day.format('dddd MMM D') }}</div>
-        <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-          <div *ngFor="let event of getEventsForSlot(day, timeSlot)" class="event">
-            <mat-card>{{ event.title }}</mat-card>
+          <div *ngFor="let timeSlot of timeSlots" class="time-slot">
+              {{ timeSlot }}
+              <div *ngFor="let event of getEventsForSlot(timeSlot)" class="event">
+                  <mat-card>{{ event.title }}</mat-card>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
+  </div>
+
+  
 </div>
-   -->

@@ -1,37 +1,29 @@
 .calendar-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .timetable {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr); /* Time column + Days */
-  }
-  
-  .time-column {
-    background-color: #f0f0f0;
-  }
-  
-  .day-column {
-    /* border-left: 1px solid #ccc; */
+  width: 100%; /* Use 100% of the available width */
+  max-width: 800px; /* Optional: Set a maximum width for larger screens */
+  margin: 20px auto; /* Center the container */
+  border: 1px solid #ccc;
+  padding: 10px;
+}
 
-    display: flex;
-    flex-direction: column; 
-    /* flex-direction: column;     Ensure this allows vertical stacking */
-  }
-  
-  .time-slot {
-    border-bottom: 1px solid #eee;
-    padding: 10px;
-    height: 20px; /* Ensure this is sufficient for visibility */
-  }
+.time-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Take up full width of the container */
+}
 
-  .event {
-    background-color: #e0f7fa;
-    padding: 5px;
-  }
-  
-  .mat-card {
-    margin-top: 2px;
-  }
-  
+.time-slot {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  width: 100%; /* Ensure each time slot takes up full width */
+}
+
+.event {
+  margin-top: 5px;
+  width: 100%; /* Ensure each event takes up full width of the time slot */
+}
+
+mat-card {
+  font-size: 12px;
+  width: 100%; /* Ensure mat-card takes up full width of the event */
+}

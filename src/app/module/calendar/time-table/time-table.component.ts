@@ -1,7 +1,8 @@
 import { Component, OnInit  } from '@angular/core';
-// import { MatDialog } from '@angular/material/dialog'; // For event creation/editing
+import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
+import {DraggableButtonComponent} from '../draggable-button/draggable-button.component'
 
 interface Event {
   title: string;
@@ -12,34 +13,24 @@ interface Event {
 @Component({
   selector: 'time-table',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, DraggableButtonComponent, CdkDrag],
   templateUrl: './time-table.component.html',
   styleUrl: './time-table.component.css'
 })
 export class TimeTableComponent implements OnInit {
 
-  days: Date[] = [];
+  selectedDay: Date = new Date(); // Initialize with the current date
+
   timeSlots: string[] = [];
-  events: Event[] = [];
+  events: Event[] = [];  
+  draggableButtons: { title: string }[] = [{ title: 'Button 1' }, { title: 'Button 2' }]; // Sample draggable buttons
 
   constructor() { }
 
   ngOnInit(): void {
-    this.generateCalendar();
     this.generateTimeSlots();
     this.loadEvents();
   }
-
-  generateCalendar() {
-    const today = new Date();
-    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Get the first day of the week (Sunday)
-
-    for (let i = 0; i < 7; i++) {
-      this.days.push(new Date(startOfWeek)); // Create a new Date object for each day
-      startOfWeek.setDate(startOfWeek.getDate() + 1); // Increment the day
-    }
-  }
-
 
   generateTimeSlots() {
     let currentTime = new Date();
@@ -54,12 +45,12 @@ export class TimeTableComponent implements OnInit {
     }
   }
 
+
   formatTime(date: Date): string {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   }
-
 
   loadEvents() {
     // Sample events
@@ -70,14 +61,21 @@ export class TimeTableComponent implements OnInit {
     ];
   }
 
-  getEventsForSlot(day: Date, timeSlot: string): Event[] {
+
+  getEventsForSlot(timeSlot: string): Event[] {
     const [hours, minutes] = timeSlot.split(':').map(Number);
-    const startTime = new Date(day);
+    const startTime = new Date(this.selectedDay);
     startTime.setHours(hours, minutes, 0, 0);
 
     return this.events.filter(event => {
-      return startTime >= event.start && startTime < event.end;
+        return startTime >= event.start && startTime < event.end;
     });
   }
+
+      // Method to change the selected day (you can bind this to a datepicker or buttons)
+    selectDay(day: Date) {
+        this.selectedDay = day;
+    }
+
 
 }
