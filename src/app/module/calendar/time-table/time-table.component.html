@@ -1,38 +1,22 @@
 <div class="calendar-container">
-  <div class="header">
-      <h2>Timetable for {{ selectedDay | date:'EEEE, MMMM d' }}</h2>
-  </div>
-
-  <div class="timetable">
-      <div class="time-column">
-          <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-              {{ timeSlot }}
-              <div *ngFor="let event of getEventsForSlot(timeSlot)" class="event">
-                  <mat-card>{{ event.title }}</mat-card>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  
-</div>
-
-
-
-<!-- <div class="calendar-container">
     <div class="header">
         <h2>Timetable for {{ selectedDay | date:'EEEE, MMMM d' }}</h2>
     </div>
 
     <div class="timetable">
         <div class="time-column">
-            <div *ngFor="let timeSlot of timeSlots" class="time-slot">
-                {{ timeSlot }}
-                <div *ngFor="let event of getEventsForSlot(timeSlot)" class="event">
-                    <mat-card>{{ event.title }}</mat-card>
-                </div>
+            <div *ngFor="let timeSlot of timeSlots" class="time-slot"
+                    cdkDropList
+                    [cdkDropListData]="calendarEvents[timeSlot]"
+                    (cdkDropListDropped)="onDrop($event, timeSlot)">
+                    {{ timeSlot }}
+                    <div *ngFor="let event of calendarEvents[timeSlot]; let i = index"
+                        class="event"
+                        cdkDrag>
+                        <mat-card>{{ event.title }}</mat-card>
+                    </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div> -->
+</div>

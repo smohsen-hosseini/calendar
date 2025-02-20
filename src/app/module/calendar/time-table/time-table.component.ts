@@ -1,12 +1,12 @@
 import { Component, OnInit  } from '@angular/core';
-import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDragEnd } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDragEnd,transferArrayItem ,DragDropModule } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { DraggableButtonComponent } from '../draggable-button/draggable-button.component'
 import { DateService } from '../../../service/DataService'; // Import DateService
 import { Subscription } from 'rxjs';  //Import Subscription
 
-interface Event {
+interface CalendarEvent  {
   title: string;
   start: Date;
   end: Date;
@@ -15,7 +15,7 @@ interface Event {
 @Component({
   selector: 'time-table',
   standalone: true,
-  imports: [CommonModule, MatCardModule, DraggableButtonComponent, CdkDrag],
+  imports: [CommonModule, MatCardModule, DraggableButtonComponent, CdkDrag, DragDropModule],
   templateUrl: './time-table.component.html',
   styleUrl: './time-table.component.css'
 })
@@ -24,7 +24,9 @@ export class TimeTableComponent implements OnInit {
   selectedDay: Date = new Date(); // Initialize with the current date
 
   timeSlots: string[] = [];
-  events: Event[] = [];  
+
+  calendarEvents: { [timeSlot: string]: CalendarEvent[] } = {};
+
   private dateSubscription: Subscription | undefined;  //Define Subscription
 
   draggableButtons: { title: string }[] = [{ title: 'Button 1' }, { title: 'Button 2' }]; // Sample draggable buttons
@@ -37,7 +39,7 @@ export class TimeTableComponent implements OnInit {
   });
 
     this.generateTimeSlots();
-    this.loadEvents();
+    this.loadCalendarEvents();
   }
 
   ngOnDestroy(): void {  //Implement OnDestroy
@@ -54,7 +56,11 @@ export class TimeTableComponent implements OnInit {
     endTime.setHours(19, 0, 0, 0); // End at 6 PM
 
     while (currentTime < endTime) {
-      this.timeSlots.push(this.formatTime(currentTime));
+      const timeSlot = this.formatTime(currentTime);
+      this.timeSlots.push(timeSlot);
+      if (!this.calendarEvents[timeSlot]) {
+        this.calendarEvents[timeSlot] = []; // Initialize empty calendarEvents list for each time slot
+      }
       currentTime.setMinutes(currentTime.getMinutes() + 30); // Increment by half an hour
     }
   }
@@ -66,30 +72,39 @@ export class TimeTableComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
-  loadEvents() {
+  loadCalendarEvents() {
     // Sample events
-    this.events = [
-      { title: 'Meeting', start: new Date('2025-02-14T09:00:00'), end: new Date('2025-02-14T10:00:00') },
-      { title: 'Lunch', start: new Date('2025-02-14T12:00:00'), end: new Date('2025-02-14T13:00:00') },
-      { title: 'Conference', start: new Date('2025-02-14T15:00:00'), end: new Date('2025-02-14T16:30:00') }
-    ];
+    this.calendarEvents['09:00'] = [{ title: 'Meeting', start: new Date('2025-02-14T09:00:00'), end: new Date('2025-02-14T10:00:00') }];
+    this.calendarEvents['12:00'] = [{ title: 'Lunch', start: new Date('2025-02-14T12:00:00'), end: new Date('2025-02-14T13:00:00') }];
+    this.calendarEvents['15:00'] = [{ title: 'Conference', start: new Date('2025-02-14T15:00:00'), end: new Date('2025-02-14T16:30:00') }];
   }
 
 
-  getEventsForSlot(timeSlot: string): Event[] {
+  getEventsForSlot(timeSlot: string): CalendarEvent[] {
     const [hours, minutes] = timeSlot.split(':').map(Number);
     const startTime = new Date(this.selectedDay);
     startTime.setHours(hours, minutes, 0, 0);
 
-    return this.events.filter(event => {
-        return startTime >= event.start && startTime < event.end;
-    });
+    return this.calendarEvents[timeSlot] || []; //Return empty array if timeslot is not found
   }
 
-      // Method to change the selected day (you can bind this to a datepicker or buttons)
-    selectDay(day: Date) {
-        this.selectedDay = day;
-    }
+    // Method to change the selected day (you can bind this to a datepicker or buttons)
+  selectDay(day: Date) {
+      this.selectedDay = day;
+  }
 
+
+  onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
 
 }

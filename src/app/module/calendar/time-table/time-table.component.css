@@ -24,6 +24,19 @@
 }
 
 mat-card {
-  font-size: 12px;
+  /* font-size: 12px; */
+  font-size: small;
   width: 100%; /* Ensure mat-card takes up full width of the event */
 }
+
+
+
+
+.header {
+  text-align: center;
+}
+
+.timetable {
+  display: flex;
+}
+
