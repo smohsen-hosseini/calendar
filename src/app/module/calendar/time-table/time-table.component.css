@@ -1,7 +1,7 @@
 .calendar-container {
-  width: 100%; /* Use 100% of the available width */
-  max-width: 800px; /* Optional: Set a maximum width for larger screens */
-  margin: 20px auto; /* Center the container */
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
   border: 1px solid #ccc;
   padding: 10px;
 }
@@ -9,28 +9,27 @@
 .time-column {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Take up full width of the container */
+  width: 100%;
 }
 
 .time-slot {
   padding: 8px;
   border-bottom: 1px solid #eee;
-  width: 100%; /* Ensure each time slot takes up full width */
+  width: 100%;
 }
 
 .event {
   margin-top: 5px;
-  width: 100%; /* Ensure each event takes up full width of the time slot */
+  width: 100%;
 }
 
+/* Apply light blue background to the mat-card */
 mat-card {
-  /* font-size: 12px; */
   font-size: small;
-  width: 100%; /* Ensure mat-card takes up full width of the event */
+  width: 100%;
+  background-color: lightblue; /* Light blue background for the entire card */
+  border: none; /* Remove the default border if you don't want it */
 }
-
-
-
 
 .header {
   text-align: center;
@@ -39,4 +38,3 @@ mat-card {
 .timetable {
   display: flex;
 }
-

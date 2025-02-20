@@ -6,17 +6,16 @@
     <div class="timetable">
         <div class="time-column">
             <div *ngFor="let timeSlot of timeSlots" class="time-slot"
-                    cdkDropList
-                    [cdkDropListData]="calendarEvents[timeSlot]"
-                    (cdkDropListDropped)="onDrop($event, timeSlot)">
-                    {{ timeSlot }}
-                    <div *ngFor="let event of calendarEvents[timeSlot]; let i = index"
-                        class="event"
-                        cdkDrag>
-                        <mat-card>{{ event.title }}</mat-card>
-                    </div>
+                 cdkDropList
+                 [cdkDropListData]="calendarEvents[timeSlot]"
+                 (cdkDropListDropped)="onDrop($event, timeSlot)">
+                {{ timeSlot }}
+                <div *ngFor="let event of calendarEvents[timeSlot]; let i = index"
+                     class="event"
+                     cdkDrag>
+                    <mat-card>{{ event.title }}</mat-card>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
