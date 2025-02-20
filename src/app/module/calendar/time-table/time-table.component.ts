@@ -24,6 +24,7 @@ export class TimeTableComponent implements OnInit {
   selectedDay: Date = new Date(); // Initialize with the current date
 
   timeSlots: string[] = [];
+  connectedDropLists: string[] = []; // Initialize as an empty array
 
   calendarEvents: { [timeSlot: string]: CalendarEvent[] } = {};
 
@@ -58,6 +59,7 @@ export class TimeTableComponent implements OnInit {
     while (currentTime < endTime) {
       const timeSlot = this.formatTime(currentTime);
       this.timeSlots.push(timeSlot);
+      this.connectedDropLists.push(timeSlot); // Add each time slot to connectedDropLists
       if (!this.calendarEvents[timeSlot]) {
         this.calendarEvents[timeSlot] = []; // Initialize empty calendarEvents list for each time slot
       }
@@ -94,17 +96,63 @@ export class TimeTableComponent implements OnInit {
   }
 
 
+  // onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
+  //   if (event.previousContainer === event.container) {
+  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  //   } else {
+  //     transferArrayItem(
+  //       event.previousContainer.data,
+  //       event.container.data,
+  //       event.previousIndex,
+  //       event.currentIndex,
+  //     );
+  //   }
+  // }
+
+
+//   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
+//     // Check if the item is dropped in the same container
+//     if (event.previousContainer === event.container) {
+//         // Move within the same time slot
+//         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+//     } else {
+//         // Move from one time slot to another
+//         const previousTimeSlot = event.previousContainer.id; // Get previous time slot ID
+//         const previousEvents = this.calendarEvents[previousTimeSlot]; // Get events from previous time slot
+
+//         // Transfer the event from previous time slot to the new one
+//         const movedEvent = previousEvents[event.previousIndex]; // Get the event being moved
+
+//         // Remove it from the previous time slot
+//         previousEvents.splice(event.previousIndex, 1);
+
+//         // Add it to the new time slot
+//         this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
+//     }
+// }
+
   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
+    console.log('Previous Container:', event.previousContainer.id);
+    console.log('Current Container:', event.container.id);
+    console.log('Event Data:', event.item.data);
+
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        // Move within the same time slot
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
+        // Move from one time slot to another
+        const previousTimeSlot = event.previousContainer.id;
+        const previousEvents = this.calendarEvents[previousTimeSlot];
+        const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event
+
+        // Add it to the new time slot
+        this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
+
+        // Reassign the calendarEvents object to trigger change detection
+        this.calendarEvents = { ...this.calendarEvents };
     }
   }
+
+
 
 }
