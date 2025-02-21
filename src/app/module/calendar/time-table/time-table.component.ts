@@ -172,7 +172,22 @@ export class TimeTableComponent implements OnInit {
             this.calendarEvents = { ...this.calendarEvents };
         }
     }
-}
+  }
 
+  deleteEvent(timeSlot: string, index: number) {
+    // Check if there are events in the specified time slot
+    if (this.calendarEvents[timeSlot] && this.calendarEvents[timeSlot].length > 0) {
+        // Remove the event at the specified index
+        this.calendarEvents[timeSlot].splice(index, 1);
+
+        // If there are no more events in this time slot, you may want to clean up
+        if (this.calendarEvents[timeSlot].length === 0) {
+            delete this.calendarEvents[timeSlot]; // Optionally remove the empty slot
+        }
+
+        // Trigger change detection by reassigning calendarEvents
+        this.calendarEvents = { ...this.calendarEvents };
+    }
+  }
 
 }

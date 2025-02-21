@@ -59,10 +59,6 @@ export class CalendarComponent implements OnInit {
       console.error('Both date and time must be provided.');
     }
 
-    // if (this.calendarForm.valid && this.timeControl.valid) {
-    //   this.dateService.setSelectedDate(this.dateControl.value); // Set selected date
-    //   console.log(this.calendarForm.value);
-    // }
     // this.openAppointmentDialog(Date(),Date()); //test
   }
 
