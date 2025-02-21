@@ -32,7 +32,7 @@ export class CalendarComponent implements OnInit {
 
   constructor(private fb: FormBuilder, public dialog: MatDialog,private dateService: DateService) {
     this.calendarForm = this.fb.group({
-      dateControl: [new Date(), Validators.required],
+      dateControl: [new Date().toISOString().substring(0, 10), Validators.required],
       timeControl: ['', Validators.required],
     });
   }
@@ -42,14 +42,28 @@ export class CalendarComponent implements OnInit {
     
   }
 
-  onSubmit() {
-    console.log("onSubmit================");
-    
-    if (this.calendarForm.valid) {
-      this.dateService.setSelectedDate(this.dateControl.value); // Set selected date
-      console.log(this.calendarForm.value);
-      }
-      this.openAppointmentDialog(Date(),Date()); //test
+  onSubmit() {   
+    const dateValue = this.calendarForm.get('dateControl')?.value; // Get the date value
+    const timeValue = this.calendarForm.get('timeControl')?.value; // Get the time value
+
+    if (dateValue && timeValue) {
+      // Combine date and time into a single Date object
+      const [hours, minutes] = timeValue.split(':').map(Number); // Split time into hours and minutes
+      const dateTime = new Date(dateValue); // Create a Date object from the date value
+      dateTime.setHours(hours, minutes); // Set the hours and minutes
+
+      this.dateService.setSelectedDate(dateTime); // Set selected date
+      console.log(dateTime); // This is your combined Date object
+      // You can now use dateTime as needed in your application
+    } else {
+      console.error('Both date and time must be provided.');
+    }
+
+    // if (this.calendarForm.valid && this.timeControl.valid) {
+    //   this.dateService.setSelectedDate(this.dateControl.value); // Set selected date
+    //   console.log(this.calendarForm.value);
+    // }
+    // this.openAppointmentDialog(Date(),Date()); //test
   }
 
   
@@ -93,5 +107,38 @@ export class CalendarComponent implements OnInit {
       }
     });
   }
+
+
+
+  // getErrorMessage(controlName: string): string | null {
+  //  console.log( "getErrorMessage called ---------------");
+    
+  //   const control = this.getControl(controlName);
+  //   if (control?.errors) {
+  //     if (control.errors['required']) {
+  //       console.log( "getErrorMessage req ---------------");
+  //       return `${this.getFieldLabel(controlName)} is required.`;
+  //     } else if (control.errors['pattern']) {
+  //       return `${this.getFieldLabel(controlName)} pattern is invalid.`;
+  //     } 
+  //   }
+  //   return controlName + "---------";
+  //   // return null;
+  // }
+
+  // getControl(controlName: string) {
+  //   return this.calendarForm.get(controlName);
+  // }
+
+  // getFieldLabel(controlName: string): string {
+  //   switch (controlName) {
+  //     case 'dateControl':
+  //       return 'Date';
+  //     case 'timeControl':
+  //       return 'Time';
+  //     default:
+  //       return controlName;
+  //   }
+  // }
   
 }

@@ -5,23 +5,29 @@
 
     <div class="timetable">
         <div class="time-column">
+            <!-- Iterate through all time slots -->
             <div *ngFor="let timeSlot of timeSlots" class="time-slot"
-                    cdkDropList
-                    [cdkDropListData]="calendarEvents[timeSlot]"
-                    [cdkDropListConnectedTo]="connectedDropLists"
-                    (cdkDropListDropped)="onDrop($event, timeSlot)"
-                    [id]="timeSlot"> <!-- Ensure unique ID -->
-                     {{ timeSlot }}
-                <div *ngFor="let event of calendarEvents[timeSlot]; let i = index"
-                        class="event"
-                        cdkDrag>
-                    <mat-card>{{ event.title }}</mat-card>
+                 cdkDropList
+                 [cdkDropListData]="calendarEvents[timeSlot] || []" 
+                 [cdkDropListConnectedTo]="connectedDropLists"
+                 (cdkDropListDropped)="onDrop($event, timeSlot)"
+                 [id]="timeSlot">
+                <!-- Display the hour -->
+                <strong>{{ timeSlot }}</strong>
+
+                <!-- Iterate through events in this time slot -->
+                <div *ngFor="let event of calendarEvents[timeSlot] || []; let i = index"
+                     class="event"
+                     cdkDrag>
+                    <mat-card>
+                        {{ event.title }} 
+                        ({{ event.start | date:'shortTime' }} - {{ event.end | date:'shortTime' }})
+                    </mat-card>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 

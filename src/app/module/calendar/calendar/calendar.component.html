@@ -14,7 +14,10 @@
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
 
-              <!-- <mat-error *ngIf="dateControl?.hasError('required') && (dateControl.touched)">Date is required</mat-error> -->
+              <!-- <mat-error *ngIf="dateControl?.invalid && (dateControl?.dirty || dateControl?.touched)">
+                {{ getErrorMessage('creditor') }}
+              </mat-error> -->
+
           </mat-form-field>
         </div>
 

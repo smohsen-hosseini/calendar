@@ -37,7 +37,8 @@ export class TimeTableComponent implements OnInit {
   ngOnInit(): void {
     this.dateSubscription = this.dateService.selectedDate$.subscribe(date => { // Subscribe to selectedDate$
       this.selectedDay = date; // Update selectedDay
-  });
+      this.loadCalendarEvents();
+    });
 
     this.generateTimeSlots();
     this.loadCalendarEvents();
@@ -49,21 +50,38 @@ export class TimeTableComponent implements OnInit {
     }
   }
 
+  // generateTimeSlots() {
+  //   let currentTime = new Date();
+  //   currentTime.setHours(8, 0, 0, 0); // Start at 8 AM
+
+  //   const endTime = new Date();
+  //   endTime.setHours(19, 0, 0, 0); // End at 6 PM
+
+  //   while (currentTime < endTime) {
+  //     const timeSlot = this.formatTime(currentTime);
+  //     this.timeSlots.push(timeSlot);
+  //     this.connectedDropLists.push(timeSlot); // Add each time slot to connectedDropLists
+  //     if (!this.calendarEvents[timeSlot]) {
+  //       this.calendarEvents[timeSlot] = []; // Initialize empty calendarEvents list for each time slot
+  //     }
+  //     currentTime.setMinutes(currentTime.getMinutes() + 60); // Increment by an Hour(+ 60) or half an hour (+ 30)
+
+  //   }
+  // }
+
   generateTimeSlots() {
-    let currentTime = new Date();
-    currentTime.setHours(8, 0, 0, 0); // Start at 8 AM
+    this.timeSlots = []; // Clear existing time slots
+    this.connectedDropLists = []; // Clear existing connected drop lists
 
-    const endTime = new Date();
-    endTime.setHours(19, 0, 0, 0); // End at 6 PM
+    for (let hour = 0; hour < 24; hour++) {
+        const timeSlot = this.formatTime(new Date(0, 0, 0, hour)); // Create a date object for each hour
+        this.timeSlots.push(timeSlot); // Add the formatted time slot
+        this.connectedDropLists.push(timeSlot); // Add each time slot to connectedDropLists
 
-    while (currentTime < endTime) {
-      const timeSlot = this.formatTime(currentTime);
-      this.timeSlots.push(timeSlot);
-      this.connectedDropLists.push(timeSlot); // Add each time slot to connectedDropLists
-      if (!this.calendarEvents[timeSlot]) {
-        this.calendarEvents[timeSlot] = []; // Initialize empty calendarEvents list for each time slot
-      }
-      currentTime.setMinutes(currentTime.getMinutes() + 30); // Increment by half an hour
+        // Initialize empty calendarEvents list for each time slot
+        if (!this.calendarEvents[timeSlot]) {
+            this.calendarEvents[timeSlot] = [];
+        }
     }
   }
 
@@ -74,11 +92,41 @@ export class TimeTableComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
+  // loadCalendarEvents() {
+  //   // Sample events
+  //   this.calendarEvents['09:00'] = [{ title: 'Meeting', start: new Date('2025-02-14T09:00:00'), end: new Date('2025-02-14T10:00:00') }];
+  //   this.calendarEvents['12:00'] = [{ title: 'Lunch', start: new Date('2025-02-14T12:00:00'), end: new Date('2025-02-14T13:00:00') }];
+  //   this.calendarEvents['15:00'] = [{ title: 'Conference', start: new Date('2025-02-14T15:00:00'), end: new Date('2025-02-14T16:30:00') }];
+  // }
+
+
   loadCalendarEvents() {
-    // Sample events
-    this.calendarEvents['09:00'] = [{ title: 'Meeting', start: new Date('2025-02-14T09:00:00'), end: new Date('2025-02-14T10:00:00') }];
-    this.calendarEvents['12:00'] = [{ title: 'Lunch', start: new Date('2025-02-14T12:00:00'), end: new Date('2025-02-14T13:00:00') }];
-    this.calendarEvents['15:00'] = [{ title: 'Conference', start: new Date('2025-02-14T15:00:00'), end: new Date('2025-02-14T16:30:00') }];
+    // Clear existing events
+    this.calendarEvents = {};
+
+    // Generate time slots if not already generated
+    if (this.timeSlots.length === 0) {
+        this.generateTimeSlots();
+    }
+
+    // Use selectedDay as the base for the event's start time
+    const startTime = new Date(this.selectedDay); // Get date and time from selectedDay
+
+    // Create an end time one hour later
+    const endTime = new Date(startTime);
+    endTime.setHours(endTime.getHours() + 1); // Set end time to one hour later
+
+    // Format start time to match a time slot (e.g., "09:00")
+    const formattedTimeSlot = this.formatTime(startTime);
+
+    // Add this event to its corresponding time slot in calendarEvents
+    this.calendarEvents[formattedTimeSlot] = [{
+        title: 'Event on Selected Day', // Example title
+        start: startTime,
+        end: endTime
+    }];
+
+    console.log('Loaded Calendar Events:', this.calendarEvents); // Debugging log
   }
 
 
@@ -95,42 +143,6 @@ export class TimeTableComponent implements OnInit {
       this.selectedDay = day;
   }
 
-
-  // onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
-  //   if (event.previousContainer === event.container) {
-  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  //   } else {
-  //     transferArrayItem(
-  //       event.previousContainer.data,
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex,
-  //     );
-  //   }
-  // }
-
-
-//   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
-//     // Check if the item is dropped in the same container
-//     if (event.previousContainer === event.container) {
-//         // Move within the same time slot
-//         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-//     } else {
-//         // Move from one time slot to another
-//         const previousTimeSlot = event.previousContainer.id; // Get previous time slot ID
-//         const previousEvents = this.calendarEvents[previousTimeSlot]; // Get events from previous time slot
-
-//         // Transfer the event from previous time slot to the new one
-//         const movedEvent = previousEvents[event.previousIndex]; // Get the event being moved
-
-//         // Remove it from the previous time slot
-//         previousEvents.splice(event.previousIndex, 1);
-
-//         // Add it to the new time slot
-//         this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
-//     }
-// }
-
   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
     console.log('Previous Container:', event.previousContainer.id);
     console.log('Current Container:', event.container.id);
@@ -141,18 +153,26 @@ export class TimeTableComponent implements OnInit {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
         // Move from one time slot to another
-        const previousTimeSlot = event.previousContainer.id;
-        const previousEvents = this.calendarEvents[previousTimeSlot];
-        const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event
+        const previousTimeSlot = event.previousContainer.id; // Get the previous time slot ID
+        const previousEvents = this.calendarEvents[previousTimeSlot]; // Get events from previous time slot
 
-        // Add it to the new time slot
-        this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
+        // Check if there are any events in the previous time slot
+        if (previousEvents && previousEvents.length > 0) {
+            const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event from the previous slot
 
-        // Reassign the calendarEvents object to trigger change detection
-        this.calendarEvents = { ...this.calendarEvents };
+            // Ensure the target time slot exists in calendarEvents
+            if (!this.calendarEvents[timeSlot]) {
+                this.calendarEvents[timeSlot] = []; // Initialize if it doesn't exist
+            }
+
+            // Add it to the new time slot
+            this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
+
+            // Reassign calendarEvents to trigger change detection
+            this.calendarEvents = { ...this.calendarEvents };
+        }
     }
-  }
-
+}
 
 
 }
