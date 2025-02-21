@@ -208,7 +208,7 @@
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "19.1.0"
 
-"@angular/animations@^18.0.0", "@angular/animations@^18.0.0 || ^19.0.0", "@angular/animations@^18.2.0", "@angular/animations@18.2.13":
+"@angular/animations@^18.0.0", "@angular/animations@^18.0.0 || ^19.0.0", "@angular/animations@^18.2.13", "@angular/animations@18.2.13":
   version "18.2.13"
   resolved "https://registry.npmjs.org/@angular/animations/-/animations-18.2.13.tgz"
   integrity sha512-rG5J5Ek5Hg+Tz2NjkNOaG6PupiNK/lPfophXpsR1t/nWujqnMWX2krahD/i6kgD+jNWNKCJCYSOVvCx/BHOtKA==

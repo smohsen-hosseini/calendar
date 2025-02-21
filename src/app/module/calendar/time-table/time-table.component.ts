@@ -160,6 +160,17 @@ export class TimeTableComponent implements OnInit {
         if (previousEvents && previousEvents.length > 0) {
             const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event from the previous slot
 
+            // Update the start and end times of the moved event based on the new time slot
+            const [newHour, newMinute] = timeSlot.split(':').map(Number); // Parse new hour and minute
+            const newStartTime = new Date(this.selectedDay); // Create a new Date object for start time
+            newStartTime.setHours(newHour, newMinute, 0, 0); // Set hours and minutes for start time
+
+            const newEndTime = new Date(newStartTime); // Create a new Date object for end time
+            newEndTime.setHours(newEndTime.getHours() + 1); // Set end time to one hour later
+
+            movedEvent.start = newStartTime; // Update start time
+            movedEvent.end = newEndTime; // Update end time
+
             // Ensure the target time slot exists in calendarEvents
             if (!this.calendarEvents[timeSlot]) {
                 this.calendarEvents[timeSlot] = []; // Initialize if it doesn't exist
@@ -173,6 +184,7 @@ export class TimeTableComponent implements OnInit {
         }
     }
   }
+
 
   deleteEvent(timeSlot: string, index: number) {
     // Check if there are events in the specified time slot

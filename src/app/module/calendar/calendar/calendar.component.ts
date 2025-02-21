@@ -4,7 +4,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule,FormControl  } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
-// import { MaterialTimePickerComponent } from '@candidosales/material-time-picker'; //third-party-library
 import { MatDialog } from '@angular/material/dialog';
 import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 import { DateService } from '../../../service/DataService'; // Import DateService
@@ -20,7 +19,6 @@ import { DateService } from '../../../service/DataService'; // Import DateServic
     FormsModule,
     ReactiveFormsModule,
     MatNativeDateModule,
-    // MaterialTimePickerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',

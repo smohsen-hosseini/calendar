@@ -1,8 +1,14 @@
-.mat-form-field {
-  width: 100%;
-  margin-bottom: 16px;
+.d-flex {
+  display: flex; /* Use Flexbox for horizontal alignment */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 1rem; /* Add spacing between items */
 }
 
-button {
-  margin-top: 16px;
+.flex-item {
+  flex: 1; /* Allow items to grow and take equal space */
+  min-width: 200px; /* Set a minimum width for each item */
+}
+
+.mat-form-field {
+  margin-bottom: 0; /* Remove default bottom margin */
 }
