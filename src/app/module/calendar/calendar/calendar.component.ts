@@ -31,7 +31,8 @@ export class CalendarComponent implements OnInit {
   constructor(private fb: FormBuilder, public dialog: MatDialog,private dateService: DateService) {
     this.calendarForm = this.fb.group({
       dateControl: [new Date().toISOString().substring(0, 10), Validators.required],
-      timeControl: ['', Validators.required],
+      timeControl: ['08:00', Validators.required],
+      titleControl: ['', Validators.required],
     });
   }
 
@@ -43,16 +44,20 @@ export class CalendarComponent implements OnInit {
   onSubmit() {   
     const dateValue = this.calendarForm.get('dateControl')?.value; // Get the date value
     const timeValue = this.calendarForm.get('timeControl')?.value; // Get the time value
+    const titleValue = this.calendarForm.get('titleControl')?.value; // Get the title value
 
     if (dateValue && timeValue) {
       // Combine date and time into a single Date object
       const [hours, minutes] = timeValue.split(':').map(Number); // Split time into hours and minutes
       const dateTime = new Date(dateValue); // Create a Date object from the date value
+     
       dateTime.setHours(hours, minutes); // Set the hours and minutes
+      // dateTime.setHours(hours); // Set the hours and minutes
 
-      this.dateService.setSelectedDate(dateTime); // Set selected date
       console.log(dateTime); // This is your combined Date object
-      // You can now use dateTime as needed in your application
+      this.dateService.setSelectedDate(dateTime); // Set selected date
+      this.dateService.setTitle(titleValue);
+
     } else {
       console.error('Both date and time must be provided.');
     }
@@ -69,6 +74,9 @@ export class CalendarComponent implements OnInit {
     return this.calendarForm.get('timeControl') as FormControl;
   }
 
+  get titleControl(): FormControl {
+    return this.calendarForm.get('titleControl') as FormControl;
+  }
   
   openAppointmentDialog(startTime: any, endTime: any): void {
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {

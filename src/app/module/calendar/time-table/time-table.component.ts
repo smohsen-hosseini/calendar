@@ -22,6 +22,7 @@ interface CalendarEvent  {
 export class TimeTableComponent implements OnInit {
 
   selectedDay: Date = new Date(); // Initialize with the current date
+  selectedTitle: string = "";
 
   timeSlots: string[] = [];
   connectedDropLists: string[] = []; // Initialize as an empty array
@@ -29,6 +30,7 @@ export class TimeTableComponent implements OnInit {
   calendarEvents: { [timeSlot: string]: CalendarEvent[] } = {};
 
   private dateSubscription: Subscription | undefined;  //Define Subscription
+  private titleSubscription?: Subscription; // Define Subscription for Title
 
   draggableButtons: { title: string }[] = [{ title: 'Button 1' }, { title: 'Button 2' }]; // Sample draggable buttons
 
@@ -40,34 +42,24 @@ export class TimeTableComponent implements OnInit {
       this.loadCalendarEvents();
     });
 
+    this.titleSubscription = this.dateService.title$.subscribe(title => {
+      this.selectedTitle = title;
+      this.loadCalendarEvents();
+    });
+
     this.generateTimeSlots();
-    this.loadCalendarEvents();
   }
 
   ngOnDestroy(): void {  //Implement OnDestroy
     if (this.dateSubscription) {
         this.dateSubscription.unsubscribe();  //Unsubscribe
     }
+
+    if (this.titleSubscription) {
+      this.titleSubscription.unsubscribe();  //Unsubscribe
+    }
+
   }
-
-  // generateTimeSlots() {
-  //   let currentTime = new Date();
-  //   currentTime.setHours(8, 0, 0, 0); // Start at 8 AM
-
-  //   const endTime = new Date();
-  //   endTime.setHours(19, 0, 0, 0); // End at 6 PM
-
-  //   while (currentTime < endTime) {
-  //     const timeSlot = this.formatTime(currentTime);
-  //     this.timeSlots.push(timeSlot);
-  //     this.connectedDropLists.push(timeSlot); // Add each time slot to connectedDropLists
-  //     if (!this.calendarEvents[timeSlot]) {
-  //       this.calendarEvents[timeSlot] = []; // Initialize empty calendarEvents list for each time slot
-  //     }
-  //     currentTime.setMinutes(currentTime.getMinutes() + 60); // Increment by an Hour(+ 60) or half an hour (+ 30)
-
-  //   }
-  // }
 
   generateTimeSlots() {
     this.timeSlots = []; // Clear existing time slots
@@ -109,6 +101,9 @@ export class TimeTableComponent implements OnInit {
         this.generateTimeSlots();
     }
 
+    const title= this.selectedTitle;
+    console.log(title+"---------======-----------"+ this.selectedTitle)
+    
     // Use selectedDay as the base for the event's start time
     const startTime = new Date(this.selectedDay); // Get date and time from selectedDay
 
@@ -121,7 +116,7 @@ export class TimeTableComponent implements OnInit {
 
     // Add this event to its corresponding time slot in calendarEvents
     this.calendarEvents[formattedTimeSlot] = [{
-        title: 'Event on Selected Day', // Example title
+        title: title + "", // Example title
         start: startTime,
         end: endTime
     }];
