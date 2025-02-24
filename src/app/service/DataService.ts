@@ -13,7 +13,6 @@ export class DateService {
     private titleSource = new BehaviorSubject<string>('Default Title'); // Initial title
     title$ = this.titleSource.asObservable();
 
-  constructor() { }
 
   setSelectedDate(date: Date) {
     this.selectedDateSource.next(date);

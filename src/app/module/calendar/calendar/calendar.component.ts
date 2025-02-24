@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component,OnInit  } from '@angular/core';
+import {ChangeDetectionStrategy, Component } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -10,7 +10,7 @@ import { DateService } from '../../../service/DataService'; // Import DateServic
 
 
 @Component({
-  selector: 'calendar-form',
+  selector: 'app-calendar-form',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -24,7 +24,7 @@ import { DateService } from '../../../service/DataService'; // Import DateServic
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent {
 
   calendarForm: FormGroup;
 
@@ -36,10 +36,6 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-
-  ngOnInit(): void {
-    
-  }
 
   onSubmit() {   
     const dateValue = this.calendarForm.get('dateControl')?.value; // Get the date value
@@ -78,7 +74,7 @@ export class CalendarComponent implements OnInit {
     return this.calendarForm.get('titleControl') as FormControl;
   }
   
-  openAppointmentDialog(startTime: any, endTime: any): void {
+  openAppointmentDialog(startTime: Date, endTime: Date): void {
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
       width: '400px', // Adjust as needed
       data: { startTime: startTime, endTime: endTime } // Pass data to the dialog

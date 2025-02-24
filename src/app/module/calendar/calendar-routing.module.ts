@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CalendarComponent } from './calendar/calendar.component';
 import { TimeTableComponent } from './time-table/time-table.component';
-import { AppointmentDialogComponent } from './appointment-dialog/appointment-dialog.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 
 
