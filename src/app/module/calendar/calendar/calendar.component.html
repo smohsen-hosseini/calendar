@@ -30,15 +30,16 @@
 
       </div>
 
-        <!-- Optional: Add submit button in the same row -->
-        <div class="flex-item">
+      <!-- Optional: Add submit button in the same row -->
+      <div class="flex-item">
 
-          <button mat-raised-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-100">
-            Submit
-          </button>
+        <button mat-raised-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-100">
+          Submit
+        </button>
 
-          <!-- <button mat-button (click)="openDialog()">Open Appointment Dialog</button> -->
-        </div>
+        <button mat-button (click)="openDialog()">Open Dialog</button>
+
+      </div>
     </form>
   </fieldset>
 </div>

@@ -1,13 +1,19 @@
 {
     "root": true,
     "overrides": [
-      {
-        "files": ["*.ts"],
-        "parserOptions": {
-          "project": ["./tsconfig.json"]
-        },
-        "extends": ["plugin:@angular-eslint/recommended"],
-        "rules": {}
-      }
+        {
+            "files": [
+                "*.ts"
+            ],
+            "parserOptions": {
+                "project": [
+                    "./tsconfig.json"
+                ]
+            },
+            "extends": [
+                "plugin:@angular-eslint/recommended"
+            ],
+            "rules": {}
+        }
     ]
-  }
+}

@@ -6,20 +6,15 @@
     <div class="timetable">
         <div class="time-column">
             <!-- Iterate through all time slots -->
-            <div *ngFor="let timeSlot of timeSlots" class="time-slot"
-                 cdkDropList
-                 [cdkDropListData]="calendarEvents[timeSlot] || []"
-                 [cdkDropListConnectedTo]="connectedDropLists"
-                 (cdkDropListDropped)="onDrop($event, timeSlot)"
-                 [id]="timeSlot">
+            <div *ngFor="let timeSlot of timeSlots" class="time-slot" cdkDropList
+                [cdkDropListData]="calendarEvents[timeSlot] || []" [cdkDropListConnectedTo]="connectedDropLists"
+                (cdkDropListDropped)="onDrop($event, timeSlot)" [id]="timeSlot">
                 <strong>{{ timeSlot }}</strong>
 
                 <!-- Iterate through events in this time slot -->
-                <div *ngFor="let event of calendarEvents[timeSlot] || []; let i = index"
-                     class="event"
-                     cdkDrag>
+                <div *ngFor="let event of calendarEvents[timeSlot] || []; let i = index" class="event" cdkDrag>
                     <mat-card>
-                        {{ event.title }} 
+                        {{ event.title }}
                         ({{ event.start | date:'shortTime' }} - {{ event.end | date:'shortTime' }})
                         <!-- Add a delete button -->
                         <button mat-button (click)="deleteEvent(timeSlot, i)">Delete</button>
