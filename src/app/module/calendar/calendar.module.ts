@@ -7,7 +7,7 @@ import { CalendarRoutingModule } from './calendar-routing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatButton, MatButtonModule } from "@angular/material/button";
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatButton,
     MatButtonModule,
     AppointmentDialogComponent,
-    DragDropModule // Add this line
-  ]
+    DragDropModule, // Add this line
+  ],
 })
-export class CalendarModule { }
+export class CalendarModule {}

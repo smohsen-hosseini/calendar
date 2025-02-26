@@ -1,2 +1,55 @@
-<p>appointment-dialog works!</p>
+<div [@dialogOpen]="true">
 
+    <!-- <div class="container-fluid">
+    <fieldset class="border rounded p-4"> -->
+    <legend class="float-none w-auto px-2">Calendar (Add Appointment)</legend>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+        <!-- Flexbox row for date and time controls -->
+        <!-- <div class="d-flex align-items-end gap-3"> 
+                <div class="flex-item">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Event Title</mat-label>
+                        <input matInput formControlName="title" type="text">
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+        <div class="d-flex align-items-start gap-3">
+            <!-- Start Time Card -->
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title>Start Time</mat-card-title>
+                <mat-card-content>
+                    <p>{{ data.startTime }}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- End Time Card -->
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title>End Time</mat-card-title>
+                <mat-card-content>
+                    <p>{{ data.endTime }}</p>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Title Card -->
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title>Title</mat-card-title>
+                <mat-card-content>
+                    <p>{{ data.title }}</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <!-- <button mat-raised-button type="submit" [disabled]="!appointmentForm.valid" color="primary" class="w-100">
+                    Submit
+                </button> -->
+            <button mat-button (click)="onDelete()">Delete</button>
+            <button mat-flat-button color="warn" (click)="closeModal()">Close</button>
+        </div>
+
+    </form>
+    <!-- </fieldset>
+</div> -->
+</div>

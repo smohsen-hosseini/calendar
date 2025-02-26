@@ -1,9 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CdkDrag, CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  moveItemInArray,
+  DragDropModule,
+} from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { DateService } from '../../../service/DataService'; // Import DateService
-import { Subscription } from 'rxjs';  //Import Subscription
+import { EventService } from '../../../service/EventService'; // Import DateService
+import { ScheduleService } from '../../../service/ScheduleService'; // Import DateService
+import { Subscription } from 'rxjs'; //Import Subscription
+import { MatDialog } from '@angular/material/dialog';
+import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 
 interface CalendarEvent {
   title: string;
@@ -16,47 +25,64 @@ interface CalendarEvent {
   standalone: true,
   imports: [CommonModule, MatCardModule, CdkDrag, DragDropModule],
   templateUrl: './time-table.component.html',
-  styleUrl: './time-table.component.css'
+  styleUrl: './time-table.component.css',
 })
 export class TimeTableComponent implements OnInit, OnDestroy {
-
   selectedDay: Date = new Date(); // Initialize with the current date
-  selectedTitle = "";
+  selectedTitle = '';
 
   timeSlots: string[] = [];
   connectedDropLists: string[] = []; // Initialize as an empty array
 
-  // calendarEvents: { [timeSlot: string]: CalendarEvent[] } = {};
+  selectedTimeSlot = '';
+  selectedIndex = 0;
+
   calendarEvents: Record<string, CalendarEvent[]> = {};
 
-  private dateSubscription: Subscription | undefined;  //Define Subscription
+  private dateSubscription: Subscription | undefined; //Define Subscription
   private titleSubscription?: Subscription; // Define Subscription for Title
 
-  constructor(private dateService: DateService) { }
+  constructor(
+    private dateService: DateService,
+    private eventService: EventService,
+    private scheduleService: ScheduleService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.dateSubscription = this.dateService.selectedDate$.subscribe(date => { // Subscribe to selectedDate$
+    this.dateSubscription = this.dateService.selectedDate$.subscribe((date) => {
+      // Subscribe to selectedDate$
       this.selectedDay = date; // Update selectedDay
       this.loadCalendarEvents();
     });
 
-    this.titleSubscription = this.dateService.title$.subscribe(title => {
+    this.titleSubscription = this.dateService.title$.subscribe((title) => {
       this.selectedTitle = title;
       this.loadCalendarEvents();
+    });
+
+    this.eventService.events$.subscribe((events) => {
+      this.calendarEvents = events;
+    });
+
+    this.scheduleService.runMethod$.subscribe(() => {
+      if (this.selectedTimeSlot && this.selectedIndex !== undefined) {
+        this.deleteEvent(this.selectedTimeSlot, this.selectedIndex);
+      }
     });
 
     this.generateTimeSlots();
   }
 
-  ngOnDestroy(): void {  //Implement OnDestroy
+  ngOnDestroy(): void {
+    //Implement OnDestroy
     if (this.dateSubscription) {
-      this.dateSubscription.unsubscribe();  //Unsubscribe
+      this.dateSubscription.unsubscribe(); //Unsubscribe
     }
 
     if (this.titleSubscription) {
-      this.titleSubscription.unsubscribe();  //Unsubscribe
+      this.titleSubscription.unsubscribe(); //Unsubscribe
     }
-
   }
 
   generateTimeSlots() {
@@ -75,7 +101,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     }
   }
 
-
   formatTime(date: Date): string {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -88,7 +113,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   //   this.calendarEvents['12:00'] = [{ title: 'Lunch', start: new Date('2025-02-14T12:00:00'), end: new Date('2025-02-14T13:00:00') }];
   //   this.calendarEvents['15:00'] = [{ title: 'Conference', start: new Date('2025-02-14T15:00:00'), end: new Date('2025-02-14T16:30:00') }];
   // }
-
 
   loadCalendarEvents() {
     // Clear existing events
@@ -112,15 +136,16 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     const formattedTimeSlot = this.formatTime(startTime);
 
     // Add this event to its corresponding time slot in calendarEvents
-    this.calendarEvents[formattedTimeSlot] = [{
-      title: "(" + title + ")", // Example title
-      start: startTime,
-      end: endTime
-    }];
+    this.calendarEvents[formattedTimeSlot] = [
+      {
+        title: '(' + title + ')', // Example title
+        start: startTime,
+        end: endTime,
+      },
+    ];
 
     console.log('Loaded Calendar Events:', this.calendarEvents); // Debugging log
   }
-
 
   getEventsForSlot(timeSlot: string): CalendarEvent[] {
     const [hours, minutes] = timeSlot.split(':').map(Number);
@@ -142,7 +167,11 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
     if (event.previousContainer === event.container) {
       // Move within the same time slot
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       // Move from one time slot to another
       const previousTimeSlot = event.previousContainer.id; // Get the previous time slot ID
@@ -177,10 +206,14 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     }
   }
 
-
   deleteEvent(timeSlot: string, index: number) {
+    console.log('TimeTableComponent deleteEvent  >>>>>>>>>>>>>>>>>>>>');
+
     // Check if there are events in the specified time slot
-    if (this.calendarEvents[timeSlot] && this.calendarEvents[timeSlot].length > 0) {
+    if (
+      this.calendarEvents[timeSlot] &&
+      this.calendarEvents[timeSlot].length > 0
+    ) {
       // Remove the event at the specified index
       this.calendarEvents[timeSlot].splice(index, 1);
 
@@ -194,4 +227,30 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectEvent(event: CalendarEvent, timeSlot: string, index: number): void {
+    console.log('selectEvent before openDalog and delte');
+    this.selectedTimeSlot = timeSlot;
+    this.selectedIndex = index;
+    this.openDialog(event, this.selectedTimeSlot, this.selectedIndex);
+  }
+
+  openDialog(event: CalendarEvent, timeSlot: string, index: number): void {
+    const dialogRef = this.dialog.open(AppointmentDialogComponent, {
+      width: "60vw",
+      height: "50vh",
+      data: {
+        startTime: event.start,
+        endTime: event.end,
+        title: event.title,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Appointment Data:', result);
+        // Handle the result here (e.g., save it to a server)
+        this.eventService.deleteEvent(timeSlot, index);
+      }
+    });
+  }
 }

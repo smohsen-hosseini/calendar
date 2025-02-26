@@ -5,7 +5,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
+// import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 import { DateService } from '../../../service/DataService'; // Import DateService
 
 
@@ -73,70 +73,5 @@ export class CalendarComponent {
   get titleControl(): FormControl {
     return this.calendarForm.get('titleControl') as FormControl;
   }
-
-  openAppointmentDialog(startTime: Date, endTime: Date): void {
-    const dialogRef = this.dialog.open(AppointmentDialogComponent, {
-      width: '400px', // Adjust as needed
-      data: { startTime: startTime, endTime: endTime } // Pass data to the dialog
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if (result) {
-        console.log('Appointment Data:', result);
-        // Handle the data returned from the dialog (e.g., save the appointment)
-      }
-    });
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(AppointmentDialogComponent, {
-      width: '250px',
-      data: {
-        startTime: new Date(), // Set initial start time to the current date and time
-        endTime: new Date(new Date().getTime() + 60 * 60 * 1000), // Set initial end time to one hour later
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Appointment Data:', result);
-        // Handle the result here (e.g., save it to a server)
-      }
-    });
-  }
-
-
-
-  // getErrorMessage(controlName: string): string | null {
-  //  console.log( "getErrorMessage called ---------------");
-
-  //   const control = this.getControl(controlName);
-  //   if (control?.errors) {
-  //     if (control.errors['required']) {
-  //       console.log( "getErrorMessage req ---------------");
-  //       return `${this.getFieldLabel(controlName)} is required.`;
-  //     } else if (control.errors['pattern']) {
-  //       return `${this.getFieldLabel(controlName)} pattern is invalid.`;
-  //     } 
-  //   }
-  //   return controlName + "---------";
-  //   // return null;
-  // }
-
-  // getControl(controlName: string) {
-  //   return this.calendarForm.get(controlName);
-  // }
-
-  // getFieldLabel(controlName: string): string {
-  //   switch (controlName) {
-  //     case 'dateControl':
-  //       return 'Date';
-  //     case 'timeControl':
-  //       return 'Time';
-  //     default:
-  //       return controlName;
-  //   }
-  // }
 
 }

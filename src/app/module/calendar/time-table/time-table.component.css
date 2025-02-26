@@ -27,10 +27,8 @@
 mat-card {
   font-size: small;
   width: 100%;
-  background-color: lightblue;
-  /* Light blue background for the entire card */
-  border: none;
-  /* Remove the default border if you don't want it */
+  background-color: lightblue; /* Light blue background for the entire card */
+  border: none; /* Remove the default border if you don't want it */
 }
 
 .header {
