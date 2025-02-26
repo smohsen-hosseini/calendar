@@ -142,8 +142,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
         end: endTime,
       },
     ];
-
-    console.log('Loaded Calendar Events:', this.calendarEvents); // Debugging log
   }
 
   getEventsForSlot(timeSlot: string): CalendarEvent[] {
@@ -160,10 +158,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   }
 
   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
-    console.log('Previous Container:', event.previousContainer.id);
-    console.log('Current Container:', event.container.id);
-    console.log('Event Data:', event.item.data);
-
     if (event.previousContainer === event.container) {
       // Move within the same time slot
       moveItemInArray(
@@ -225,7 +219,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   }
 
   selectEvent(event: CalendarEvent, timeSlot: string, index: number): void {
-    console.log('selectEvent before openDalog and delte');
     this.selectedTimeSlot = timeSlot;
     this.selectedIndex = index;
     this.openDialog(event, this.selectedTimeSlot, this.selectedIndex);
@@ -244,7 +237,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Appointment Data:', result);
         // Handle the result here (e.g., save it to a server)
         this.eventService.deleteEvent(timeSlot, index);
       }

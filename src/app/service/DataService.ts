@@ -19,7 +19,6 @@ export class DateService {
   }
 
   setTitle(title: string) {
-    console.log(title+ ">>>>>>>>> setTitle >>>>>>>>>>")
     this.titleSource.next(title);
   }
 

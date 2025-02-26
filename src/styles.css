@@ -6,9 +6,3 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.custom-dialog-backdrop {
-    /*background-color: rgba(28, 78, 103, 0.8) !important;  !* rgba(28, 78, 103, 0.8)*!*/
-    background-color: rgba(236, 56, 161, 0.8) !important; /* rgba(28, 78, 103, 0.8)*/
-    opacity: 3 !important; /* Ensures the backdrop is fully visible */
-  }

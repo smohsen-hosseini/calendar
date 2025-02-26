@@ -51,7 +51,6 @@ export class CalendarComponent {
       dateTime.setHours(hours, minutes); // Set the hours and minutes
       // dateTime.setHours(hours); // Set the hours and minutes
 
-      console.log(dateTime); // This is your combined Date object
       this.dateService.setSelectedDate(dateTime); // Set selected date
       this.dateService.setTitle(titleValue);
 
