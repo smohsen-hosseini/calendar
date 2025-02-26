@@ -51,7 +51,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dateSubscription = this.dateService.selectedDate$.subscribe((date) => {
-      // Subscribe to selectedDate$
       this.selectedDay = date; // Update selectedDay
       this.loadCalendarEvents();
     });
@@ -138,7 +137,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     // Add this event to its corresponding time slot in calendarEvents
     this.calendarEvents[formattedTimeSlot] = [
       {
-        title: '(' + title + ')', // Example title
+        title: title , // Example title
         start: startTime,
         end: endTime,
       },
@@ -207,8 +206,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   }
 
   deleteEvent(timeSlot: string, index: number) {
-    console.log('TimeTableComponent deleteEvent  >>>>>>>>>>>>>>>>>>>>');
-
     // Check if there are events in the specified time slot
     if (
       this.calendarEvents[timeSlot] &&
@@ -236,8 +233,8 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
   openDialog(event: CalendarEvent, timeSlot: string, index: number): void {
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
-      width: "60vw",
-      height: "50vh",
+      width: '60vw',
+      height: '30vh',
       data: {
         startTime: event.start,
         endTime: event.end,

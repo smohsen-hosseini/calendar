@@ -5,8 +5,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-// import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
 import { DateService } from '../../../service/DataService'; // Import DateService
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
@@ -19,6 +19,7 @@ import { DateService } from '../../../service/DataService'; // Import DateServic
     FormsModule,
     ReactiveFormsModule,
     MatNativeDateModule,
+    MatButtonModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
@@ -57,8 +58,6 @@ export class CalendarComponent {
     } else {
       console.error('Both date and time must be provided.');
     }
-
-    // this.openAppointmentDialog(Date(),Date()); //test
   }
 
 

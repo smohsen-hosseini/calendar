@@ -1,37 +1,31 @@
 // Define a Custom Animation
-// import {animate, style, transition, trigger} from '@angular/animations';
-
-// export const dialogAnimations = {
-//   // Slide in from top with a slight scale effect
-//   dialogOpen: trigger('dialogOpen', [
-//     transition(':enter', [
-//       style({transform: 'translateY(-20%) scale(0.9)', opacity: 0}),
-//       animate('300ms ease-out', style({transform: 'translateY(0) scale(1)', opacity: 1}))
-//     ]),
-//     transition(':leave', [
-//       animate('200ms ease-in', style({transform: 'translateY(-20%) scale(0.9)', opacity: 0}))
-//     ])
-//   ])
-// };
-
-
-
-//  Fade-In Animation
-import { trigger, transition, style, animate } from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 export const dialogAnimations = {
+  // Slide in from top with a slight scale effect
   dialogOpen: trigger('dialogOpen', [
     transition(':enter', [
-      style({ opacity: 0 }),
-      animate('300ms ease-out', style({ opacity: 1 }))
+      style({transform: 'translateY(-20%) scale(0.9)', opacity: 0}),
+      animate('300ms ease-out', style({transform: 'translateY(0) scale(1)', opacity: 1}))
     ]),
     transition(':leave', [
-      animate('200ms ease-in', style({ opacity: 0 }))
+      animate('200ms ease-in', style({transform: 'translateY(-20%) scale(0.9)', opacity: 0}))
     ])
   ])
 };
 
+// //  Fade-In Animation
+// import { trigger, transition, style, animate } from '@angular/animations';
 
+// export const dialogAnimations = {
+//   dialogOpen: trigger('dialogOpen', [
+//     transition(':enter', [
+//       style({ opacity: 0 }),
+//       animate('300ms ease-out', style({ opacity: 1 })),
+//     ]),
+//     transition(':leave', [animate('200ms ease-in', style({ opacity: 0 }))]),
+//   ]),
+// };
 
 //Zoom-In Animation
 // import { trigger, transition, style, animate } from '@angular/animations';
@@ -48,7 +42,6 @@ export const dialogAnimations = {
 //   ])
 // };
 
-
 // Slide-In from Bottom Animation
 // import { trigger, transition, style, animate } from '@angular/animations';
 //
@@ -63,7 +56,6 @@ export const dialogAnimations = {
 //     ])
 //   ])
 // };
-
 
 // Slide-In from Right Animation
 // import { trigger, transition, style, animate } from '@angular/animations';
