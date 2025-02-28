@@ -13,12 +13,7 @@ import { ScheduleService } from '../../../service/ScheduleService'; // Import Da
 import { Subscription } from 'rxjs'; //Import Subscription
 import { MatDialog } from '@angular/material/dialog';
 import { AppointmentDialogComponent } from '../appointment-dialog/appointment-dialog.component';
-
-interface CalendarEvent {
-  title: string;
-  start: Date;
-  end: Date;
-}
+import { CalendarEvent } from '../../../models/CalendarEvent';
 
 @Component({
   selector: 'app-time-table',
@@ -28,8 +23,7 @@ interface CalendarEvent {
   styleUrl: './time-table.component.css',
 })
 export class TimeTableComponent implements OnInit, OnDestroy {
-  selectedDay: Date = new Date(); // Initialize with the current date
-  selectedTitle = '';
+  selectedCalendarEvent: CalendarEvent = new CalendarEvent();
 
   timeSlots: string[] = [];
   connectedDropLists: string[] = []; // Initialize as an empty array
@@ -39,8 +33,8 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
   calendarEvents: Record<string, CalendarEvent[]> = {};
 
+  private calendarEvnetSubscription: Subscription | undefined; //Define Subscription
   private dateSubscription: Subscription | undefined; //Define Subscription
-  private titleSubscription?: Subscription; // Define Subscription for Title
 
   constructor(
     private dateService: DateService,
@@ -50,15 +44,11 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.dateSubscription = this.dateService.selectedDate$.subscribe((date) => {
-      this.selectedDay = date; // Update selectedDay
-      this.loadCalendarEvents();
-    });
-
-    this.titleSubscription = this.dateService.title$.subscribe((title) => {
-      this.selectedTitle = title;
-      this.loadCalendarEvents();
-    });
+    this.calendarEvnetSubscription =
+      this.dateService.selectedCalendarEvent$.subscribe((calendarEvent) => {
+        this.selectedCalendarEvent = calendarEvent; // Update calendarEvent
+        this.loadCalendarEvents();
+      });
 
     this.eventService.events$.subscribe((events) => {
       this.calendarEvents = events;
@@ -75,13 +65,11 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     //Implement OnDestroy
-    if (this.dateSubscription) {
-      this.dateSubscription.unsubscribe(); //Unsubscribe
+
+    if (this.calendarEvnetSubscription) {
+      this.calendarEvnetSubscription.unsubscribe(); //Unsubscribe
     }
 
-    if (this.titleSubscription) {
-      this.titleSubscription.unsubscribe(); //Unsubscribe
-    }
   }
 
   generateTimeSlots() {
@@ -122,10 +110,11 @@ export class TimeTableComponent implements OnInit, OnDestroy {
       this.generateTimeSlots();
     }
 
-    const title = this.selectedTitle;
+    const title = this.selectedCalendarEvent.title;
 
-    // Use selectedDay as the base for the event's start time
-    const startTime = new Date(this.selectedDay); // Get date and time from selectedDay
+    const startTime = new Date(this.selectedCalendarEvent.appointmentDate); // Get date and time from selectedDay
+    const [hours, minutes] = this.selectedCalendarEvent.appintmentTime.split(':').map(Number);
+    startTime.setHours(hours, minutes, 0, 0);
 
     // Create an end time one hour later
     const endTime = new Date(startTime);
@@ -137,24 +126,21 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     // Add this event to its corresponding time slot in calendarEvents
     this.calendarEvents[formattedTimeSlot] = [
       {
-        title: title , // Example title
-        start: startTime,
-        end: endTime,
+        title: title, // Example title
+        appointmentDate: this.selectedCalendarEvent.appointmentDate,
+        startTime: startTime,
+        endTime: endTime,
+        appintmentTime: '',
       },
     ];
   }
 
   getEventsForSlot(timeSlot: string): CalendarEvent[] {
     const [hours, minutes] = timeSlot.split(':').map(Number);
-    const startTime = new Date(this.selectedDay);
+    const startTime = new Date(this.selectedCalendarEvent.appointmentDate);
     startTime.setHours(hours, minutes, 0, 0);
 
     return this.calendarEvents[timeSlot] || []; //Return empty array if timeslot is not found
-  }
-
-  // Method to change the selected day (you can bind this to a datepicker or buttons)
-  selectDay(day: Date) {
-    this.selectedDay = day;
   }
 
   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
@@ -176,14 +162,14 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
         // Update the start and end times of the moved event based on the new time slot
         const [newHour, newMinute] = timeSlot.split(':').map(Number); // Parse new hour and minute
-        const newStartTime = new Date(this.selectedDay); // Create a new Date object for start time
+        const newStartTime = new Date(this.selectedCalendarEvent.appointmentDate); // Create a new Date object for start time
         newStartTime.setHours(newHour, newMinute, 0, 0); // Set hours and minutes for start time
 
         const newEndTime = new Date(newStartTime); // Create a new Date object for end time
         newEndTime.setHours(newEndTime.getHours() + 1); // Set end time to one hour later
 
-        movedEvent.start = newStartTime; // Update start time
-        movedEvent.end = newEndTime; // Update end time
+        movedEvent.startTime = newStartTime; // Update start time
+        movedEvent.endTime = newEndTime; // Update end time
 
         // Ensure the target time slot exists in calendarEvents
         if (!this.calendarEvents[timeSlot]) {
@@ -218,21 +204,25 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectEvent(event: CalendarEvent, timeSlot: string, index: number): void {
+  selectEvent(
+    calendarEvent: CalendarEvent,
+    timeSlot: string,
+    index: number
+  ): void {
     this.selectedTimeSlot = timeSlot;
     this.selectedIndex = index;
-    this.openDialog(event, this.selectedTimeSlot, this.selectedIndex);
+    this.openDialog(calendarEvent, this.selectedTimeSlot, this.selectedIndex);
   }
 
-  openDialog(event: CalendarEvent, timeSlot: string, index: number): void {
+  openDialog(
+    calendarEvent: CalendarEvent,
+    timeSlot: string,
+    index: number
+  ): void {
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
       width: '60vw',
       height: '30vh',
-      data: {
-        startTime: event.start,
-        endTime: event.end,
-        title: event.title,
-      },
+      data: calendarEvent,
     });
 
     dialogRef.afterClosed().subscribe((result) => {

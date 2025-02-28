@@ -1,13 +1,30 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  OnInit,
+  ChangeDetectorRef,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+  FormControl,
+} from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DateService } from '../../../service/DataService'; // Import DateService
 import { MatButtonModule } from '@angular/material/button';
-
+import { CalendarEvent } from '../../../models/CalendarEvent';
 
 @Component({
   selector: 'app-calendar-form',
@@ -19,46 +36,87 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     ReactiveFormsModule,
     MatNativeDateModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css'
+  styleUrl: './calendar.component.css',
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit, OnChanges {
+  @Input() action!: string; // Input property to determine "Create" or "Edit"
+
+  @Input() selectedCalendarEventForUpdate!: CalendarEvent; // Input property to receive the user object
+
+  @Output() appintmentCreated: EventEmitter<CalendarEvent> =
+    new EventEmitter<CalendarEvent>();
+  @Output() appintmentUpdated: EventEmitter<CalendarEvent> =
+    new EventEmitter<CalendarEvent>();
 
   calendarForm: FormGroup;
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private dateService: DateService) {
+  constructor(
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    private dateService: DateService,
+    private readonly cdr: ChangeDetectorRef //todo: check later
+  ) {
     this.calendarForm = this.fb.group({
-      dateControl: [new Date().toISOString().substring(0, 10), Validators.required],
+      dateControl: [
+        new Date().toISOString().substring(0, 10),
+        Validators.required,
+      ],
       timeControl: ['08:00', Validators.required],
       titleControl: ['', Validators.required],
     });
   }
 
+  ngOnInit(): void {
+    if (this.selectedCalendarEventForUpdate) {
+      this.updateFormValues();
+    }
+    this.cdr.detectChanges(); // Force change detection
+  }
 
   onSubmit() {
-    const dateValue = this.calendarForm.get('dateControl')?.value; // Get the date value
-    const timeValue = this.calendarForm.get('timeControl')?.value; // Get the time value
-    const titleValue = this.calendarForm.get('titleControl')?.value; // Get the title value
+    if (!this.calendarForm.valid) return;
 
-    if (dateValue && timeValue) {
-      // Combine date and time into a single Date object
-      const [hours, minutes] = timeValue.split(':').map(Number); // Split time into hours and minutes
-      const dateTime = new Date(dateValue); // Create a Date object from the date value
+    const calendarEvent: CalendarEvent = new CalendarEvent();
+    calendarEvent.title = this.calendarForm.get('titleControl')?.value; // Get the title value
+    calendarEvent.appintmentTime = this.calendarForm.get('timeControl')?.value; // Get the time value
+    calendarEvent.appointmentDate = this.calendarForm.get('dateControl')?.value; // Get the date value
 
-      dateTime.setHours(hours, minutes); // Set the hours and minutes
-      // dateTime.setHours(hours); // Set the hours and minutes
+    // Combine date and time into a single Date object
+    const [hours, minutes] = calendarEvent.appintmentTime
+      .split(':')
+      .map(Number); // Split time into hours and minutes
+    const dateTime = new Date(calendarEvent.appointmentDate); // Create a Date object from the date value
+    dateTime.setHours(hours, minutes); // Set the hours and minutes
 
-      this.dateService.setSelectedDate(dateTime); // Set selected date
-      this.dateService.setTitle(titleValue);
 
+    // dateTime.setHours(hours); // Set the hours and minutes
+    this.dateService.setCalendarEvent(calendarEvent); // Set selected date
+
+    this.dateService.setSelectedDate(dateTime); // Set selected date
+
+    if (this.action.toLowerCase().trim() == 'create') {
+      console.log('Calendar Create!!!!!');
+    } else if (this.action.toLowerCase().trim() == 'edit') {
+      console.log('Calendar Edit!!!!!');
     } else {
-      console.error('Both date and time must be provided.');
+      console.log('Calendar Unknown!!!!!');
     }
   }
 
+  updateFormValues(): void {
+    if (this.selectedCalendarEventForUpdate) {
+      this.calendarForm.patchValue({
+        titleControl: this.selectedCalendarEventForUpdate.title || '',
+        timeControl: this.selectedCalendarEventForUpdate.appintmentTime || '',
+        dateControl: this.selectedCalendarEventForUpdate.appointmentDate || '',
+      });
+      this.cdr.detectChanges(); // Force change detection (when opening Dialog for Edit Record)
+    }
+  }
 
   get dateControl(): FormControl {
     return this.calendarForm.get('dateControl') as FormControl;
@@ -72,4 +130,9 @@ export class CalendarComponent {
     return this.calendarForm.get('titleControl') as FormControl;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedCalendarEventForUpdate']?.currentValue) {
+      this.updateFormValues(); // Update form with input data when it changes
+    }
+  }
 }

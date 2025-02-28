@@ -10,17 +10,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { ScheduleService } from '../../../service/ScheduleService'; // Import DateService
 import { MatButtonModule } from '@angular/material/button';
-
-export interface AppointmentDialogData {
-  startTime: Date;
-  endTime: Date;
-  title: string;
-}
+import { CalendarComponent } from '../calendar/calendar.component';
+import { CalendarEvent } from '../../../models/CalendarEvent';
+// export interface AppointmentDialogData {
+//   startTime: Date;
+//   endTime: Date;
+//   title: string;
+// }
 
 @Component({
   selector: 'app-appointment-dialog',
   standalone: true,
   imports: [
+    CalendarComponent,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -34,12 +36,16 @@ export interface AppointmentDialogData {
 })
 export class AppointmentDialogComponent {
   showContent = false;
+  selectedCalendarEvent!: CalendarEvent;
 
   constructor(
     public dialogRef: MatDialogRef<AppointmentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AppointmentDialogData,
+    @Inject(MAT_DIALOG_DATA) public data: CalendarEvent,
     private scheduleService: ScheduleService
-  ) {}
+  ) {
+    this.selectedCalendarEvent = data;
+    console.log("+++++++++++++AppointmentDialogComponent appintmentTime: " + this.selectedCalendarEvent.appintmentTime)
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

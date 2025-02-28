@@ -1,6 +1,6 @@
 <div class="calendar-container">
     <div class="header">
-        <h2>Timetable for {{ selectedDay | date:'EEEE, MMMM d' }}</h2>
+        <h2>Timetable for {{ selectedCalendarEvent.appointmentDate| date:'EEEE, MMMM d' }}</h2>
     </div>
 
     <div class="timetable">
@@ -15,7 +15,7 @@
                 <div *ngFor="let event of calendarEvents[timeSlot] || []; let i = index" class="event" cdkDrag>
                     <mat-card (click)="selectEvent(event, timeSlot,i)">
                         {{ event.title }}
-                        ({{ event.start | date:'shortTime' }} - {{ event.end | date:'shortTime' }})
+                        ({{ event.startTime | date:'shortTime' }} - {{ event.endTime | date:'shortTime' }})
                     </mat-card>
                 </div>
             </div>
