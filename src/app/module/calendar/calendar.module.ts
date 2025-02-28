@@ -10,6 +10,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
+
+import { MatNativeDateModule } from '@angular/material/core';
+// import { MatTimepickerModule } from '@angular/material/timepicker';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -21,6 +25,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatDatepickerModule,
     MatButton,
     MatButtonModule,
+    MatNativeDateModule,
+    // MatTimepickerModule,
     AppointmentDialogComponent,
     DragDropModule, // Add this line
   ],

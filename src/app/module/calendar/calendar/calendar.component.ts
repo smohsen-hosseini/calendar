@@ -9,9 +9,11 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { MatTimepickerModule } from '@angular/material/timepicker';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +22,6 @@ import {
   ReactiveFormsModule,
   FormControl,
 } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DateService } from '../../../service/DataService'; // Import DateService
 import { MatButtonModule } from '@angular/material/button';
@@ -33,6 +34,7 @@ import { CalendarEvent } from '../../../models/CalendarEvent';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    // MatTimepickerModule,
     FormsModule,
     ReactiveFormsModule,
     MatNativeDateModule,
@@ -91,7 +93,6 @@ export class CalendarComponent implements OnInit, OnChanges {
       .map(Number); // Split time into hours and minutes
     const dateTime = new Date(calendarEvent.appointmentDate); // Create a Date object from the date value
     dateTime.setHours(hours, minutes); // Set the hours and minutes
-
 
     // dateTime.setHours(hours); // Set the hours and minutes
     this.dateService.setCalendarEvent(calendarEvent); // Set selected date

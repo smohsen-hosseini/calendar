@@ -69,7 +69,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     if (this.calendarEvnetSubscription) {
       this.calendarEvnetSubscription.unsubscribe(); //Unsubscribe
     }
-
   }
 
   generateTimeSlots() {
@@ -113,7 +112,9 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     const title = this.selectedCalendarEvent.title;
 
     const startTime = new Date(this.selectedCalendarEvent.appointmentDate); // Get date and time from selectedDay
-    const [hours, minutes] = this.selectedCalendarEvent.appintmentTime.split(':').map(Number);
+    const [hours, minutes] = this.selectedCalendarEvent.appintmentTime
+      .split(':')
+      .map(Number);
     startTime.setHours(hours, minutes, 0, 0);
 
     // Create an end time one hour later
@@ -130,7 +131,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
         appointmentDate: this.selectedCalendarEvent.appointmentDate,
         startTime: startTime,
         endTime: endTime,
-        appintmentTime: '',
+        appintmentTime: this.selectedCalendarEvent.appintmentTime
       },
     ];
   }
@@ -162,7 +163,9 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
         // Update the start and end times of the moved event based on the new time slot
         const [newHour, newMinute] = timeSlot.split(':').map(Number); // Parse new hour and minute
-        const newStartTime = new Date(this.selectedCalendarEvent.appointmentDate); // Create a new Date object for start time
+        const newStartTime = new Date(
+          this.selectedCalendarEvent.appointmentDate
+        ); // Create a new Date object for start time
         newStartTime.setHours(newHour, newMinute, 0, 0); // Set hours and minutes for start time
 
         const newEndTime = new Date(newStartTime); // Create a new Date object for end time
@@ -209,6 +212,11 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     timeSlot: string,
     index: number
   ): void {
+    console.log(
+      'selectEvent calendarEvent.appintmentTime )))))))))))))) ' +
+        calendarEvent.appintmentTime
+    );
+
     this.selectedTimeSlot = timeSlot;
     this.selectedIndex = index;
     this.openDialog(calendarEvent, this.selectedTimeSlot, this.selectedIndex);
@@ -219,6 +227,9 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     timeSlot: string,
     index: number
   ): void {
+    console.log(
+      'openDialog timeTable, appintmentTime:  ' + calendarEvent.appintmentTime
+    );
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
       width: '60vw',
       height: '30vh',
