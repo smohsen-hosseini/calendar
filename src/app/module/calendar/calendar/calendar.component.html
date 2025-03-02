@@ -2,7 +2,7 @@
   <fieldset class="border rounded p-4">
     <legend class="float-none w-auto px-2">Appointment Details</legend>
 
-    <br/>
+    <br />
     <form [formGroup]="calendarForm" (ngSubmit)="onSubmit()">
 
       <div class="d-flex justify-content-between align-items-center">
@@ -30,7 +30,10 @@
         <button mat-raised-button type="submit" [disabled]="!calendarForm.valid" color="primary" class="w-25">
           Submit
         </button>
-        <button *ngIf="renderDeleteButton()" mat-raised-button color="warn" (click)="onDelete($event)">Delete</button>
+        <button *ngIf="renderDeleteButton()" mat-raised-button color="warn" (click)="onDelete($event)"
+          matTooltip="Delete">
+          <mat-icon class="acu-danger-color">delete</mat-icon>
+        </button>
       </div>
 
     </form>

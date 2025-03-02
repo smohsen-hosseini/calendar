@@ -131,7 +131,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
         appointmentDate: this.selectedCalendarEvent.appointmentDate,
         startTime: startTime,
         endTime: endTime,
-        appintmentTime: this.selectedCalendarEvent.appintmentTime
+        appintmentTime: this.selectedCalendarEvent.appintmentTime,
       },
     ];
   }
@@ -212,11 +212,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     timeSlot: string,
     index: number
   ): void {
-    console.log(
-      'selectEvent calendarEvent.appintmentTime )))))))))))))) ' +
-        calendarEvent.appintmentTime
-    );
-
     this.selectedTimeSlot = timeSlot;
     this.selectedIndex = index;
     this.openDialog(calendarEvent, this.selectedTimeSlot, this.selectedIndex);
@@ -232,7 +227,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     );
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
       width: '60vw',
-      height: '40vh',
+      height: '50vh',
       data: calendarEvent,
     });
 

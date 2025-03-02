@@ -10,6 +10,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,12 +37,12 @@ import { ScheduleService } from '../../../service/ScheduleService'; // Import Da
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    // MatTimepickerModule,
     FormsModule,
     ReactiveFormsModule,
     MatNativeDateModule,
     MatButtonModule,
     CommonModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
@@ -113,6 +114,14 @@ export class CalendarComponent implements OnInit, OnChanges {
   }
 
   updateFormValues(): void {
+    console.log(
+      'update form value appointmentTime: ' +
+        this.selectedCalendarEventForUpdate.appintmentTime
+    );
+    console.log(
+      'update form value title: ' + this.selectedCalendarEventForUpdate.title
+    );
+
     if (this.selectedCalendarEventForUpdate) {
       this.calendarForm.patchValue({
         titleControl: this.selectedCalendarEventForUpdate.title || '',
