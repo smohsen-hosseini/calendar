@@ -232,7 +232,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     );
     const dialogRef = this.dialog.open(AppointmentDialogComponent, {
       width: '60vw',
-      height: '30vh',
+      height: '40vh',
       data: calendarEvent,
     });
 

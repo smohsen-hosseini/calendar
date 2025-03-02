@@ -9,11 +9,12 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-// import { MatTimepickerModule } from '@angular/material/timepicker';
 import {
   FormBuilder,
   FormGroup,
@@ -26,6 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DateService } from '../../../service/DataService'; // Import DateService
 import { MatButtonModule } from '@angular/material/button';
 import { CalendarEvent } from '../../../models/CalendarEvent';
+import { ScheduleService } from '../../../service/ScheduleService'; // Import DateService
 
 @Component({
   selector: 'app-calendar-form',
@@ -39,6 +41,7 @@ import { CalendarEvent } from '../../../models/CalendarEvent';
     ReactiveFormsModule,
     MatNativeDateModule,
     MatButtonModule,
+    CommonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
@@ -60,6 +63,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private dateService: DateService,
+    private scheduleService: ScheduleService,
     private readonly cdr: ChangeDetectorRef //todo: check later
   ) {
     this.calendarForm = this.fb.group({
@@ -135,5 +139,16 @@ export class CalendarComponent implements OnInit, OnChanges {
     if (changes['selectedCalendarEventForUpdate']?.currentValue) {
       this.updateFormValues(); // Update form with input data when it changes
     }
+  }
+
+  onDelete(event: Event): void {
+    event.preventDefault(); // Prevent default form submission
+    this.scheduleService.runMethodInTimeTable();
+    this.cdr.detectChanges(); // Force change detection if necessary
+  }
+
+  renderDeleteButton(): boolean {
+    if (this.action.toLowerCase().trim() === 'edit') return true;
+    return false;
   }
 }

@@ -13,6 +13,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.container-fluid {
+  margin-left: 40px; /* Left margin */
+  margin-right: 40px; /* Right margin */
+}
+
 fieldset {
   background-color: #f9f9f9; /* Light background */
   border: 1px solid #ddd; /* Light border */

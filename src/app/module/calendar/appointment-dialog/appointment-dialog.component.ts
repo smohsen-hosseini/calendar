@@ -8,15 +8,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
-import { ScheduleService } from '../../../service/ScheduleService'; // Import DateService
 import { MatButtonModule } from '@angular/material/button';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { CalendarEvent } from '../../../models/CalendarEvent';
-// export interface AppointmentDialogData {
-//   startTime: Date;
-//   endTime: Date;
-//   title: string;
-// }
 
 @Component({
   selector: 'app-appointment-dialog',
@@ -40,20 +34,13 @@ export class AppointmentDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<AppointmentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CalendarEvent,
-    private scheduleService: ScheduleService
+    @Inject(MAT_DIALOG_DATA) public data: CalendarEvent
   ) {
     this.selectedCalendarEvent = data;
-    console.log("+++++++++++++AppointmentDialogComponent appintmentTime: " + this.selectedCalendarEvent.appintmentTime)
   }
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  onDelete(): void {
-    this.scheduleService.runMethodInTimeTable();
-    this.dialogRef.close({ action: 'delete' });
   }
 
   closeModal(): void {
