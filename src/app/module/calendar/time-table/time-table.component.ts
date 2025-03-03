@@ -34,7 +34,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   calendarEvents: Record<string, CalendarEvent[]> = {};
 
   private calendarEvnetSubscription: Subscription | undefined; //Define Subscription
-  private dateSubscription: Subscription | undefined; //Define Subscription
 
   constructor(
     private dateService: DateService,
@@ -110,28 +109,18 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     }
 
     const title = this.selectedCalendarEvent.title;
-
-    const startTime = new Date(this.selectedCalendarEvent.appointmentDate); // Get date and time from selectedDay
-    const [hours, minutes] = this.selectedCalendarEvent.appintmentTime
-      .split(':')
-      .map(Number);
-    startTime.setHours(hours, minutes, 0, 0);
-
-    // Create an end time one hour later
-    const endTime = new Date(startTime);
-    endTime.setHours(endTime.getHours() + 1); // Set end time to one hour later
+    const appointmentDate = this.selectedCalendarEvent.appointmentDate;
+    const appintmentTime = this.selectedCalendarEvent.appintmentTime;
 
     // Format start time to match a time slot (e.g., "09:00")
-    const formattedTimeSlot = this.formatTime(startTime);
+    const formattedTimeSlot = appintmentTime;
 
     // Add this event to its corresponding time slot in calendarEvents
     this.calendarEvents[formattedTimeSlot] = [
       {
         title: title, // Example title
-        appointmentDate: this.selectedCalendarEvent.appointmentDate,
-        startTime: startTime,
-        endTime: endTime,
-        appintmentTime: this.selectedCalendarEvent.appintmentTime,
+        appointmentDate: appointmentDate,
+        appintmentTime: appintmentTime,
       },
     ];
   }
@@ -161,18 +150,8 @@ export class TimeTableComponent implements OnInit, OnDestroy {
       if (previousEvents && previousEvents.length > 0) {
         const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event from the previous slot
 
+        movedEvent.appintmentTime = timeSlot;
         // Update the start and end times of the moved event based on the new time slot
-        const [newHour, newMinute] = timeSlot.split(':').map(Number); // Parse new hour and minute
-        const newStartTime = new Date(
-          this.selectedCalendarEvent.appointmentDate
-        ); // Create a new Date object for start time
-        newStartTime.setHours(newHour, newMinute, 0, 0); // Set hours and minutes for start time
-
-        const newEndTime = new Date(newStartTime); // Create a new Date object for end time
-        newEndTime.setHours(newEndTime.getHours() + 1); // Set end time to one hour later
-
-        movedEvent.startTime = newStartTime; // Update start time
-        movedEvent.endTime = newEndTime; // Update end time
 
         // Ensure the target time slot exists in calendarEvents
         if (!this.calendarEvents[timeSlot]) {

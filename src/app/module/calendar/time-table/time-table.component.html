@@ -14,8 +14,8 @@
                 <!-- Iterate through events in this time slot -->
                 <div *ngFor="let event of calendarEvents[timeSlot] || []; let i = index" class="event" cdkDrag>
                     <mat-card (click)="selectEvent(event, timeSlot,i)">
-                        {{ event.title }}
-                        ({{ event.startTime | date:'shortTime' }} - {{ event.endTime | date:'shortTime' }})
+                        {{ event.title }} --
+                        ({{event.appintmentTime}})
                     </mat-card>
                 </div>
             </div>
