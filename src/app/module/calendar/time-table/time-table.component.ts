@@ -36,8 +36,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   calendarEvents: Record<string, CalendarEvent[]> = {};
   private destroy$ = new Subject<void>();
 
-  private calendarEvnetSubscription: Subscription | undefined; //Define Subscription
-
   constructor(
     private dateService: DateService,
     private eventService: EventService,
@@ -46,7 +44,7 @@ export class TimeTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.calendarEvnetSubscription = this.dateService.selectedCalendarEvent$
+    this.dateService.selectedCalendarEvent$
       .pipe(takeUntil(this.destroy$))
       .subscribe((calendarEvent) => {
         this.selectedCalendarEvent = calendarEvent; // Update calendarEvent
@@ -136,46 +134,19 @@ export class TimeTableComponent implements OnInit, OnDestroy {
     return this.calendarEvents[timeSlot] || []; //Return empty array if timeslot is not found
   }
 
-  // onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string) {
-  //   if (event.previousContainer === event.container) {
-  //     // Move within the same time slot
-  //     moveItemInArray(
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex
-  //     );
-  //   } else {
-  //     // Move from one time slot to another
-  //     const previousTimeSlot = event.previousContainer.id; // Get the previous time slot ID
-  //     const previousEvents = this.calendarEvents[previousTimeSlot]; // Get events from previous time slot
-
-  //     // Check if there are any events in the previous time slot
-  //     if (previousEvents && previousEvents.length > 0) {
-  //       const movedEvent = previousEvents.splice(event.previousIndex, 1)[0]; // Remove the event from the previous slot
-
-  //       movedEvent.appintmentTime = timeSlot;
-  //       // Update the start and end times of the moved event based on the new time slot
-
-  //       // Ensure the target time slot exists in calendarEvents
-  //       if (!this.calendarEvents[timeSlot]) {
-  //         this.calendarEvents[timeSlot] = []; // Initialize if it doesn't exist
-  //       }
-
-  //       // Add it to the new time slot
-  //       this.calendarEvents[timeSlot].splice(event.currentIndex, 0, movedEvent);
-
-  //       // Reassign calendarEvents to trigger change detection
-  //       this.calendarEvents = { ...this.calendarEvents };
-  //     }
-  //   }
-  // }
-
   onDrop(event: CdkDragDrop<CalendarEvent[]>, timeSlot: string): void {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       const previousTimeSlot = event.previousContainer.id;
-      const movedEvent = this.calendarEvents[previousTimeSlot].splice(event.previousIndex, 1)[0];
+      const movedEvent = this.calendarEvents[previousTimeSlot].splice(
+        event.previousIndex,
+        1
+      )[0];
       movedEvent.appintmentTime = timeSlot;
 
       if (!this.calendarEvents[timeSlot]) {
@@ -185,7 +156,6 @@ export class TimeTableComponent implements OnInit, OnDestroy {
       this.eventService.updateEvents(this.calendarEvents);
     }
   }
-
 
   deleteEvent(timeSlot: string, index: number): void {
     if (
@@ -226,10 +196,8 @@ export class TimeTableComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Handle the result here (e.g., save it to a server)
         this.eventService.deleteEvent(timeSlot, index);
       }
     });
   }
-  
 }
