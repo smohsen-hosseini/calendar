@@ -8,10 +8,12 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -48,17 +50,20 @@ import { ScheduleService } from '../../../service/ScheduleService'; // Import Da
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
 })
-export class CalendarComponent implements OnInit, OnChanges {
+export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() action!: string; // Input property to determine "Create" or "Edit"
-
   @Input() selectedCalendarEventForUpdate!: CalendarEvent; // Input property to receive the user object
 
-  @Output() appintmentCreated: EventEmitter<CalendarEvent> =
-    new EventEmitter<CalendarEvent>();
-  @Output() appintmentUpdated: EventEmitter<CalendarEvent> =
-    new EventEmitter<CalendarEvent>();
+  // @Output() appintmentCreated: EventEmitter<CalendarEvent> =
+  //   new EventEmitter<CalendarEvent>();
+  // @Output() appintmentUpdated: EventEmitter<CalendarEvent> =
+  //   new EventEmitter<CalendarEvent>();
+
+  @Output() appointmentCreated = new EventEmitter<CalendarEvent>();
+  @Output() appointmentUpdated = new EventEmitter<CalendarEvent>();
 
   calendarForm: FormGroup;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -81,7 +86,34 @@ export class CalendarComponent implements OnInit, OnChanges {
     if (this.selectedCalendarEventForUpdate) {
       this.updateFormValues();
     }
-    this.cdr.detectChanges(); // Force change detection
+    // this.cdr.detectChanges(); // Force change detection
+
+    this.calendarForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.calendarForm.valid) {
+          this.emitAppointmentEvent();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private emitAppointmentEvent(): void {
+    const calendarEvent: CalendarEvent = {
+      title: this.calendarForm.get('titleControl')?.value,
+      appointmentDate: this.calendarForm.get('dateControl')?.value,
+      appintmentTime: this.calendarForm.get('timeControl')?.value,
+    };
+
+    if (this.action.toLowerCase().trim() === 'create') {
+      this.appointmentCreated.emit(calendarEvent);
+    } else if (this.action.toLowerCase().trim() === 'edit') {
+      this.appointmentUpdated.emit(calendarEvent);
+    }
   }
 
   onSubmit() {

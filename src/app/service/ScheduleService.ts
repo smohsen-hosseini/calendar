@@ -9,7 +9,6 @@ export class ScheduleService {
   runMethod$ = this.runMethodSubject.asObservable();
 
   runMethodInTimeTable(): void {
-    console.log("ScheduleService.runMethodInTimeTable() >>>>>>>>>>>>>>>");
     this.runMethodSubject.next();
   }
 }

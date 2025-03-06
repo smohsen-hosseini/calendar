@@ -8,19 +8,17 @@ import { CalendarEvent } from '../models/CalendarEvent';
 export class DateService {
   private selectedCalendarEventSource = new BehaviorSubject<CalendarEvent>(
     new CalendarEvent()
-  ); // Initialization
+  );
   selectedCalendarEvent$ = this.selectedCalendarEventSource.asObservable();
 
-  setCalendarEvent(calendarEvent: CalendarEvent) {
+  private selectedDateSource = new BehaviorSubject<Date>(new Date());
+  selectedDate$ = this.selectedDateSource.asObservable();
+
+  setCalendarEvent(calendarEvent: CalendarEvent): void {
     this.selectedCalendarEventSource.next(calendarEvent);
   }
 
-  private selectedDateSource = new BehaviorSubject<Date>(new Date()); // Initial date
-  selectedDate$ = this.selectedDateSource.asObservable();
-
-  setSelectedDate(date: Date) {
+  setSelectedDate(date: Date): void {
     this.selectedDateSource.next(date);
   }
-
-
 }
