@@ -53,12 +53,6 @@ import { ScheduleService } from '../../../service/ScheduleService'; // Import Da
 export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() action!: string; // Input property to determine "Create" or "Edit"
   @Input() selectedCalendarEventForUpdate!: CalendarEvent; // Input property to receive the user object
-
-  // @Output() appintmentCreated: EventEmitter<CalendarEvent> =
-  //   new EventEmitter<CalendarEvent>();
-  // @Output() appintmentUpdated: EventEmitter<CalendarEvent> =
-  //   new EventEmitter<CalendarEvent>();
-
   @Output() appointmentCreated = new EventEmitter<CalendarEvent>();
   @Output() appointmentUpdated = new EventEmitter<CalendarEvent>();
 
