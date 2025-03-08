@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { DateService } from '../../../service/DataService'; // Import DateService
 import { EventService } from '../../../service/EventService'; // Import DateService
 import { ScheduleService } from '../../../service/ScheduleService'; // Import DateService
-import { Subscription } from 'rxjs'; //Import Subscription
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
