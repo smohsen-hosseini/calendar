@@ -115,19 +115,20 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
 
     const calendarEvent: CalendarEvent = new CalendarEvent();
     calendarEvent.title = this.calendarForm.get('titleControl')?.value; // Get the title value
-    calendarEvent.appintmentTime = this.calendarForm.get('timeControl')?.value; // Get the time value
-    calendarEvent.appointmentDate = this.calendarForm.get('dateControl')?.value; // Get the date value
+    let timeValue = this.calendarForm.get('timeControl')?.value; // Get the time value
 
-    // Combine date and time into a single Date object
-    const [hours, minutes] = calendarEvent.appintmentTime
-      .split(':')
-      .map(Number); // Split time into hours and minutes
+    // Extract only the hour part and set minutes to "00"
+    const hours = timeValue.split(':')[0]; // Get only the hours
+    timeValue = `${String(hours).padStart(2, '0')}:00`;
+
+    calendarEvent.appintmentTime = timeValue; // Store the HH:00 format
+    calendarEvent.appointmentDate = this.calendarForm.get('dateControl')?.value; // Get the date value... // Combine date and time into a single Date object
+
     const dateTime = new Date(calendarEvent.appointmentDate); // Create a Date object from the date value
-    dateTime.setHours(hours, minutes); // Set the hours and minutes
+    const [hour, minute] = calendarEvent.appintmentTime.split(':').map(Number);
+    dateTime.setHours(hour, minute); // Set the hours and minutes
 
-    // dateTime.setHours(hours); // Set the hours and minutes
     this.dateService.setCalendarEvent(calendarEvent); // Set selected date
-
     this.dateService.setSelectedDate(dateTime); // Set selected date
 
     if (this.action.toLowerCase().trim() == 'create') {
